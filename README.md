@@ -35,7 +35,7 @@ python -m venv venv
 3. Activate the environment
 - Windows PowerShell:
 ```bash
-venv\Scripts\Activate.ps1
+source venv/Scripts/activate
 ```
 - Linux/macOS:
 ```bash
