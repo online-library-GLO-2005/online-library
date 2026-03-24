@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
-from services.book_service import insert_book, get_books
-from schemas.book_schema import BookCreateSchema, BookResponseSchema
+from app.services.book_service import insert_book, get_books
+from app.schemas.book_schema import BookCreateSchema, BookResponseSchema
 
 bp = Blueprint("books", __name__, url_prefix="/books")
 

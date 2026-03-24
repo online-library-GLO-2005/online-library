@@ -1,4 +1,4 @@
-from extensions import ma
+from app.extensions import ma
 from marshmallow import fields
 
 class BookCreateSchema(ma.Schema):

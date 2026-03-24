@@ -1,5 +1,5 @@
-from extensions import get_connection
-from utils.errors import AppError
+from app.extensions import get_connection
+from app.utils.errors import AppError
 
 def get_all_books():
     try:
