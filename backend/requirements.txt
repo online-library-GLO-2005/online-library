@@ -1,12 +1,8 @@
 # Core
 Flask==2.3.3
 
-# Database
-Flask-SQLAlchemy==3.1.1
+# Database (raw SQL)
 PyMySQL==1.1.1
-
-# Migrations
-Flask-Migrate==4.0.5
 
 # Validation / DTOs
 marshmallow==3.21.1
