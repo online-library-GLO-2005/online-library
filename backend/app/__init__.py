@@ -1,5 +1,6 @@
 from flask import Flask
 from app.extensions import ma, jwt
+from app.routes.health import bp as health_bp
 from app.routes.books import bp as books_bp
 from app.utils.errors import AppError
 
@@ -15,6 +16,7 @@ def create_app():
     jwt.init_app(app)
 
     # Register blueprints
+    app.register_blueprint(health_bp)
     app.register_blueprint(books_bp)
 
     # Global error handler
