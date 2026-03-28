@@ -1,91 +1,165 @@
-# Online Library Project
+# 📚 Online Library
 
-## Overview
-This project is an online library web application. Users can browse content, track reading progress, bookmark items, and leave reviews. Admins can manage content and moderate reviews.  
-It follows a **three-tier architecture**: frontend (client), backend (server), and database.
+A full-stack web application for browsing and managing an online library. Users can track reading progress, bookmark favourites, and leave reviews. Admins can manage content and moderate reviews.
 
-## Technologies
-- **Backend**: Python + Flask  
-- **Frontend**: HTML, CSS (with Bootstrap), JavaScript  
-- **Database**: MySQL (SQL scripts, triggers, routines)  
-- **Testing**: Python unittest or pytest  
-- **Tools**: Git, OBS Studio (for demo recording)
+---
 
-## Frontend Styling
-- Uses **Bootstrap 5** via CDN for responsive layouts and components  
-- `main.css` contains custom styles for branding or overrides  
+## 🏗️ Architecture
 
-## Requirements
-- Python 3.10+
-- MySQL server
-- pip (Python package manager)
+Three-tier architecture with each tier running in its own Docker container:
 
-## Installation
-1. Clone the repository:
+```
+React (Frontend)  →  Flask (Backend)  →  MySQL (Database)
+   :3000                 :5000               :3306
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React 19, TypeScript, Tailwind CSS, Vite |
+| Backend | Python, Flask |
+| Database | MySQL 8 |
+| Auth | JWT (Flask-JWT-Extended) |
+| Validation | Marshmallow |
+| Containerization | Docker, Docker Compose |
+| Testing | pytest |
+
+---
+
+## 📁 Project Structure
+
+```
+online-library/
+├── docker-compose.yml
+├── frontend/
+│   ├── Dockerfile
+│   ├── src/
+│   └── ...
+└── backend/
+    ├── Dockerfile
+    ├── run.py
+    ├── requirements.txt
+    ├── db/
+    │   ├── init.sql        ← runs automatically on first boot
+    │   └── connection.py
+    └── app/
+        ├── __init__.py     ← app factory
+        ├── ...
+```
+> More about project structure of backend and frontend in the documentation folder
+---
+
+## ⚙️ Requirements
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) must be installed and running
+  - [Windows](https://docs.docker.com/desktop/setup/install/windows-install/)
+  - [Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
+  - [Linux](https://docs.docker.com/desktop/setup/install/linux/)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
+
 ```bash
-git clone <repo-url>
+git clone https://github.com/your-username/online-library.git
 cd online-library
 ```
 
-2. Create a virtual environment
+### 2. Configure environment variables
+==== THIS IS STILL NOT DONE, NO .env IN PROJECT STILL (WIP) ====
+Create a `.env` file at the project root:
+
+```env
+MYSQL_ROOT_PASSWORD=your_password
+MYSQL_DATABASE=online_library
+JWT_SECRET_KEY=your-long-random-secret-key
+```
+
+### 3. Build and run
+
+First time or after dependency changes:
+
 ```bash
-python -m venv venv
+docker-compose up --build
 ```
 
-3. Activate the environment
-- Windows PowerShell:
+After that:
+
 ```bash
-source venv/Scripts/activate
+docker-compose up -d
 ```
-- Linux/macOS:
+
+> `-d` runs containers in the background (detached mode), freeing your terminal.
+
+### 4. Stop
+
 ```bash
-source venv/bin/activate
+docker-compose down
 ```
 
-4. Install Python dependencies:
+---
+
+## 🌐 Servers
+
+| Service | URL | Notes |
+|---|---|---|
+| Frontend | http://localhost:3000 | React dev server |
+| Backend | http://localhost:5000 | Flask API |
+| MySQL | localhost:3306 | Dev only — open in MySQL Workbench |
+
+> ⚠️ The MySQL port (3306) is exposed for development only. It will not be available in production.
+
+---
+
+## 🗄️ Database
+
+The database is initialized automatically on first boot using `backend/db/init.sql`.
+
+To inspect the database, connect via **MySQL Workbench**:
+
+| Field | Value |
+|---|---|
+| Host | localhost |
+| Port | 3306 |
+| User | root |
+| Password | *(your `.env` value)* |
+
+> ⚠️ Default password is `example` — change this before any deployment. (THIS WILL BE CHANGED - WIP)
+> ⚠️ Make sure ports `3000`, `5000`, and `3306` are free
+
+---
+
+## 🔄 When to Rebuild
+
+Run `docker-compose up --build` when you change:
+
+- A `Dockerfile`
+- `requirements.txt` (Python dependencies)
+- `package.json` (JS dependencies)
+
+For regular code changes (`.py`, `.tsx`, etc.), the volume mounts pick up changes automatically — no rebuild needed.
+
+---
+
+## 📡 API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/` | API info |
+| GET | `/health` | Health check |
+
+> More endpoints are to be documented in the documentation folder as the project grows.
+
+---
+
+## 🧪 Testing
+
 ```bash
-pip install -r backend/requirements.txt
+cd backend
+pytest
 ```
-
-5. Setup the database
-
-**Option A**: MySQL Workbench (GUI)
-If you prefer a visual interface, follow these steps:
-- **Connect**: Open MySQL Workbench and connect to your local instance using your credentials (e.g., root).
-- **Create Schema**: Run the following command in a new query tab:
-	```sql
-	CREATE DATABASE online_library;
-	```
-- **Initialize Tables**: Open the file *backend/db/init.sql* and execute the entire script to generate the required tables.
-- **Populate Data**: Open *backend/db/data.sql* and execute it to load the sample data.
-
-**Option B**: Command Line (CLI)
-For those who like to stay in the terminal, run these commands from the root of the project:
-- **Connect**: Open MySQL Workbench and connect to your local instance using your credentials (e.g., root).
-- **Create Schema**: Run the following command in a new query tab:
-	```sql
-	CREATE DATABASE online_library;
-	```
-*run the following commands from project root*:
-- Initialize tables:
-```bash
-mysql -u <user> -p online_library < backend/db/init.sql
-```
-
-- Populate with sample data:
-```sql
-# mysql -u <user> -p online_library < backend/db/data.sql
-```
-
-[!IMPORTANT] Replace ```<user>``` with your MySQL username. After running the command, you will be prompted to enter your password due to the ```-p``` flag.
-
-6. Run the Flask server:
-```bash
-python backend/app.py
-```
-
-7. Open the site in a browser at http://127.0.0.1:5000/
-
-## Notes
-- Make sure the virtual environment is activated whenever you work on the project.
-- Dependencies are installed only in the virtual environment.

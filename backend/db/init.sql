@@ -1,4 +1,4 @@
-USE only_library;
+USE online_library;
 
 CREATE TABLE IF NOT EXISTS Utilisateur (UID char(200), nom varchar(200), date_naissance DATE, telephone varchar(20), adresse varchar(255)
                                        , date_creation DATETIME DEFAULT CURRENT_TIMESTAMP, mot_de_passe varchar(255), email varchar(200),

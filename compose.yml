@@ -1,0 +1,55 @@
+# Compile and exec 3 servers: frontend with React, backend with python Flask, and MySQL as database
+
+services:
+  backend:
+    container_name: flask-container
+    build: ./backend
+    ports:
+      - '5000:5000'   #default flask port
+    volumes: # Remove in production
+      - ./backend:/app    # Mount code instead of rebuilding
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health', timeout=2)"]
+      interval: 5s
+      timeout: 30s
+      retries: 6
+      start_period: 30s
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: on-failure
+
+  frontend:
+    container_name: react-container
+    build: ./frontend
+    ports:
+      - '3000:3000'   #default react port
+    volumes: # Remove in production
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: on-failure
+
+  db:
+    image: mysql:8    # MySQL version 8
+    container_name: mysql-container
+    ports: # Comment this if we don't need to use mysql db with mysql workbench
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: online_library
+    volumes:
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 5s
+      timeout: 30s
+      retries: 6
+      start_period: 30s
+    restart: on-failure
+
+volumes:
+  mysql_data:
