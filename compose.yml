@@ -9,7 +9,7 @@ services:
     volumes: # Remove in production
       - ./backend:/app    # Mount code instead of rebuilding
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000', timeout=2)"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health', timeout=2)"]
       interval: 5s
       timeout: 30s
       retries: 6
