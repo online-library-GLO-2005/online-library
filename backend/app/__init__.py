@@ -47,4 +47,5 @@ def create_app() -> Flask:
 
     # Server internal error
     
+
     return app
