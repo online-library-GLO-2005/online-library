@@ -3,15 +3,19 @@
 services:
   backend:
     container_name: flask-container
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfiles/Dockerfile.dev
     ports:
-      - '5000:5000'   #default flask port
-    volumes: # Remove in production
+      - '${PORT:-5000}:5000'   #default flask port
+    volumes:
       - ./backend:/app    # Mount code instead of rebuilding
+    env_file:
+      - ./backend/.env
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health', timeout=2)"]
-      interval: 5s
-      timeout: 30s
+      interval: 10s
+      timeout: 5s
       retries: 6
       start_period: 30s
     depends_on:
@@ -21,10 +25,14 @@ services:
 
   frontend:
     container_name: react-container
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfiles/Dockerfile.dev
     ports:
-      - '3000:3000'   #default react port
-    volumes: # Remove in production
+      - '${PORT:-3000}:3000'   #default react port
+    env_file:
+      - ./frontend/.env
+    volumes:
       - ./frontend:/app
       - /app/node_modules
     depends_on:
@@ -35,18 +43,18 @@ services:
   db:
     image: mysql:8    # MySQL version 8
     container_name: mysql-container
-    ports: # Comment this if we don't need to use mysql db with mysql workbench
+    attach: false
+    ports:
       - '3306:3306'
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: online_library
+    env_file:
+      - ./backend/.env
     volumes:
-      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./backend/db:/docker-entrypoint-initdb.d # Start bd with sql files in db folder in order
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p$$MYSQL_ROOT_PASSWORD"]
-      interval: 5s
-      timeout: 30s
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
       retries: 6
       start_period: 30s
     restart: on-failure

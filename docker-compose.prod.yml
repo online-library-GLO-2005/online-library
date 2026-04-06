@@ -1,0 +1,48 @@
+services:
+
+  frontend:
+    container_name: nginx-server
+    image: ghcr.io/online-library-glo-2005/online-library/frontend:${IMAGE_TAG:-latest}
+    ports:
+      - '${PORT:-80}:80'   #80 default nginx port
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: on-failure
+  
+  backend:
+    container_name: gunicorn-container
+    image: ghcr.io/online-library-glo-2005/online-library/backend:${IMAGE_TAG:-latest}
+    ports:
+      - '${PORT:-8000}:8000'  # 8000 default gunicorn port
+    env_file:
+      - ./backend/.env
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2)"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: on-failure
+  
+  db:
+    image: mysql:8    # MySQL version 8
+    container_name: mysql-container
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend/db:/docker-entrypoint-initdb.d # Start bd with sql files in db folder in order
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+    restart: on-failure
+
+volumes:
+  mysql_data:
