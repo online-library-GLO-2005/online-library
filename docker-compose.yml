@@ -7,7 +7,7 @@ services:
       context: ./backend
       dockerfile: ./Dockerfiles/Dockerfile.dev
     ports:
-      - '${PORT:-5000}:5000'   #default flask port
+      - '5000:5000'   #default flask port
     volumes:
       - ./backend:/app    # Mount code instead of rebuilding
     env_file:
@@ -29,7 +29,7 @@ services:
       context: ./frontend
       dockerfile: ./Dockerfiles/Dockerfile.dev
     ports:
-      - '${PORT:-3000}:3000'   #default react port
+      - '3000:3000'   #default react port
     env_file:
       - ./frontend/.env
     volumes:

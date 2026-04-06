@@ -4,7 +4,7 @@ services:
     container_name: nginx-server
     image: ghcr.io/online-library-glo-2005/online-library/frontend:${IMAGE_TAG:-latest}
     ports:
-      - '${PORT:-80}:80'   #80 default nginx port
+      - '80:80'   #80 default nginx port
     depends_on:
       backend:
         condition: service_healthy
@@ -14,7 +14,7 @@ services:
     container_name: gunicorn-container
     image: ghcr.io/online-library-glo-2005/online-library/backend:${IMAGE_TAG:-latest}
     ports:
-      - '${PORT:-8000}:8000'  # 8000 default gunicorn port
+      - '8000:8000'  # 8000 default gunicorn port
     env_file:
       - ./backend/.env
     healthcheck:

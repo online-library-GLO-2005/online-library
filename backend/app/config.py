@@ -1,2 +1,7 @@
+import os
 class Config:
-    JWT_SECRET_KEY = "secret-key"
+    FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY")
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+    
+    
+    
