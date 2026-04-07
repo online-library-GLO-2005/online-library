@@ -3,6 +3,7 @@ Update this if there's a smarter and better way:
 
 > Also every Get all should have queries with params.
 
+```md
 /auth
     POST /login
     POST /signup
@@ -35,3 +36,4 @@ Update this if there's a smarter and better way:
 
 /search
     GET /?q=...          # search across books, authors, genres, publishers, users
+```
