@@ -4,7 +4,8 @@ from flask_jwt_extended import (
     get_jwt_identity,
     get_jwt,
 )
-import bcrypt
+import bcrypt  # Password hashing, a lot of protection against brute force AND db theft
+import hashlib  # For token hashing, protecting against db theft
 
 
 # === JWT for protected routes ===
@@ -22,6 +23,12 @@ def generate_access_token(user_id: str, is_admin: bool = False) -> str:
     return create_access_token(
         identity=user_id, additional_claims={"is_admin": is_admin}
     )
+
+
+# Hash token with SHA256 which is faster and a slight protection against DB theft
+# This is a deterministic hashing, so we can always find the same token by hashing what is sent
+def hash_token(token: str) -> str:
+    return str(hashlib.sha256(token.encode()).hexdigest)
 
 
 # Get user id from jwt token, the token is passed through the decorator of the route @jwt_required()
@@ -44,5 +51,6 @@ def hashPassword(password: str) -> str:
     return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
 
+# Bcrypt has its own comparing, this is not a deterministic hashing so we have to use this.
 def comparePassword(password: str, hashedPassword: str) -> bool:
     return bcrypt.checkpw(password.encode("utf-8"), hashedPassword.encode("utf-8"))

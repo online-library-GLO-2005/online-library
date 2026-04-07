@@ -95,7 +95,16 @@ CREATE TABLE IF NOT EXISTS Publie (PID char(200), ISBN char(200), Date_de_Public
                                  ON UPDATE CASCADE
                                  ON DELETE CASCADE);
 
--- TODO: Create token table for auth login for jwt
+-- This is a table for storing user tokens, as well as revoking them.
+CREATE TABLE IF NOT EXISTS refresh_tokens (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    UID     INT NOT NULL, -- A user can have many tokens if they log in from different places (i.e. cellphone, anonymous browser)
+    token_hash  VARCHAR(255) NOT NULL UNIQUE,   -- hashed, not raw to protect against db theft
+    expires_at  DATETIME NOT NULL,
+    revoked     BOOLEAN DEFAULT FALSE,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UID) REFERENCES Utilisateur(UID) ON DELETE CASCADE
+);
 
 CREATE USER 'myuser'@'%' IDENTIFIED BY 'mypassword';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON online_library.* TO 'myuser'@'%';
