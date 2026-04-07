@@ -1,5 +1,5 @@
 from app.repositories.base_repo import BaseRepo
-from app.models.Book import Book
+from app.models.book import Book
 
 
 class BookRepo(BaseRepo):
@@ -20,7 +20,7 @@ class BookRepo(BaseRepo):
             WHERE {Book.Columns.ID} = %s
         """
 
-        rows = self.db.execute(query, (book_id,))
+        rows = self._db.execute(query, (book_id,))
         if not rows:
             return None
         row = rows[0]
