@@ -6,7 +6,7 @@ from app.middleware.logging import configure_logging
 from app.extensions import jwt, cors
 from app.routes.health import bp as health_bp
 from app.routes.index import bp as index_bp
-from backend.app.routes.books_route import bp as books_bp
+from app.routes.books_route import bp as books_bp
 
 
 # Add blueprints of routes in here
