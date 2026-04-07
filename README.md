@@ -99,10 +99,10 @@ docker compose up --build
 For subsequent runs:
 
 ```bash
-docker compose up -d
+docker compose up
 ```
 
-> `-d` runs containers in the background (detached mode), freeing your terminal.
+> add a `-d` if you want containers to run in the background (detached mode), freeing your terminal.
 
 ### 3b. Production — run from pre-built images
 

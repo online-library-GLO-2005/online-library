@@ -19,8 +19,6 @@ def register_blueprints(app: Flask) -> None:
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(Config)
-    # DefaultJSONProvider.sort_keys = False
-    # app.json.sort_keys = False
 
     # Middleware config, only filters the /health log
     configure_logging()
