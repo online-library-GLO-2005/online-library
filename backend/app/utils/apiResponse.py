@@ -6,7 +6,8 @@ from typing import Any
 def success_response(
     status_code: int, data: dict[str, Any] | None = None, message: str = ""
 ):
-    resp: dict[str, Any] = {"success": True}
+    resp: dict[str, Any] = {}
+    resp["success"] = True
 
     if data:
         resp["data"] = data
@@ -26,5 +27,7 @@ def error_response(status_code: int, error: Any):
     else:
         error_msg = str(error) if error else "An error occurred"
 
-    resp: dict[str, Any] = {"success": False, "error": error_msg}
+    resp: dict[str, Any] = {}
+    resp["success"] = False
+    resp["error"] = error_msg
     return jsonify(resp), status_code

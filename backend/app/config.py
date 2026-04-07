@@ -1,10 +1,12 @@
 import os
 import ast
 from datetime import timedelta
+from flask.json.provider import DefaultJSONProvider
 
 
 class Config:
     FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY")
+    DefaultJSONProvider.sort_keys = False
 
     # Parses and transforms in list
     CORS_ORIGINS = ast.literal_eval(os.getenv("CORS_ORIGINS", "[]"))

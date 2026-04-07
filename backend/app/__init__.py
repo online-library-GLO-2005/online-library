@@ -2,6 +2,7 @@ from flask import Flask
 from app.config import Config
 from app.middleware.error_handlers import register_error_handlers
 from app.middleware.logging import configure_logging
+from flask.json.provider import DefaultJSONProvider
 
 from app.extensions import jwt, cors
 from app.routes.health import bp as health_bp
@@ -19,6 +20,8 @@ def register_blueprints(app: Flask) -> None:
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(Config)
+    DefaultJSONProvider.sort_keys = False
+    # app.json.sort_keys = False
 
     # Middleware config, only filters the /health log
     configure_logging()
