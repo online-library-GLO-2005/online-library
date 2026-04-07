@@ -95,6 +95,8 @@ CREATE TABLE IF NOT EXISTS Publie (PID char(200), ISBN char(200), Date_de_Public
                                  ON UPDATE CASCADE
                                  ON DELETE CASCADE);
 
+-- TODO: Create token table for auth login for jwt
+
 CREATE USER 'myuser'@'%' IDENTIFIED BY 'mypassword';
 GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON online_library.* TO 'myuser'@'%';
 FLUSH PRIVILEGES;

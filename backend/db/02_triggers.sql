@@ -1,0 +1,1 @@
+--TODO: Mettre à jour automatiquement la note moyenne d'un livre quand une note est ajouté (Use procedure)

@@ -20,7 +20,7 @@ A RESTful backend API for an online library system, built with Flask. Supports b
 ---
 
 ## 📁 Project Structure
-Feature-based archictecture:
+Layer-based archictecture:
 
 ```
 online-library/
@@ -31,43 +31,24 @@ online-library/
     └── app/
         ├── __init__.py             # App factory (create_app), registers all blueprints
         ├── config.py               # Config loaded from .env
-        ├── extensions.py           # get_db(), close_db(), mysql connection via Flask g
-        ├── models/                 # Shared dataclasses — shape of data, no DB logic
-        │   ├── __init__.py
-        │   ├── book.py
-        │   ├── author.py
-        │   ├── user.py
-        │   └── publisher.py
-        ├── features/
-        │   ├── books/
-        │   │   ├── __init__.py
-        │   │   ├── routes.py       # Blueprint, HTTP in/out only
-        │   │   ├── service.py      # Business logic, calls repo(s)
-        │   │   ├── repo.py         # Raw SQL queries, returns Book dataclasses
-        │   │   └── schema.py       # Marshmallow: validate input, serialize output
-        │   ├── authors/
-        │   │   ├── __init__.py
-        │   │   ├── routes.py
-        │   │   ├── service.py
-        │   │   ├── repo.py
-        │   │   └── schema.py
-        │   ├── users/
-        │   │   ├── __init__.py
-        │   │   ├── routes.py
-        │   │   ├── service.py
-        │   │   ├── repo.py
-        │   │   └── schema.py
-        │   └── publishers/
-        │       ├── __init__.py
-        │       ├── routes.py
-        │       ├── service.py
-        │       ├── repo.py
-        │       └── schema.py
-        ├── middleware/             # Auth, error handling, logging, etc.
-        │   └── __init__.py
-        └── utils/
-            ├── __init__.py
-            └── errors.py          # Custom error classes
+        ├── extensions.py           # Flask extensions (Marshmallow, JWT, CORS)
+        ├── errors.py               # Custom app error
+        ├── routes/        # HTTP in/out, blueprints
+        │   └── book.py      
+        ├── services/      # business logic
+        │   └── book.py      
+        ├── repos/         # raw SQL queries
+        │   └── book.py      
+        ├── schemas/       # Marshmallow validation + serialization
+        │   └── book.py      
+        ├── middleware/    # global request handlers (logging, errors)
+        │   └── error_handlers.py 
+        ├── infrastructure/
+        │   ├── db.py      # connection
+        │   ├── passwords.py
+        │   └── jwt.py
+        └── utils/         # remaining helpers (decorators, errors)
+            └── decorators.py      # @admin_required
 ```
 
 ---
