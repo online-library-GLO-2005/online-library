@@ -11,6 +11,7 @@ Update this if there's a smarter and better way:
 /users
     GET /                           # Get all users, query params
     GET /:id
+    GET /me                         # JWT required
     GET /me/comments                # protected, get all user comments, allow query as well (like search by book id or book name)
     GET /me/books                   # protected, my saved books
     POST /me/books                  # protected, save a book
@@ -25,7 +26,7 @@ Update this if there's a smarter and better way:
     PUT /:id                        # Admin required
     DELETE /:id                     # Admin required
     GET /:id/comments               # get comments for a book
-    POST /:id/comments              # create a comment — add this back
+    POST /:id/comments              # create a comment
 
 /comments
     PUT /:id                        # protected, admin and ownership checked in sesrvice layer
@@ -35,17 +36,21 @@ Update this if there's a smarter and better way:
     GET /                           # Get all genres, queries with params (Like unique name)
     GET /:id                        # Get genre by id
     POST /                          # Admin required, Create genre
+    PUT /:id                        # Admin required, update
     DELETE /:id                     # Admin required
 
 /authors
     GET /                           # Get all author, queries with params
     GET /:id                        # Get author by id
     POST /                          # Admin required, Create author
+    PUT /:id                        # Admin required
     DELETE /:id                     # Admin required
+    
 /publishers
     GET /                           # Get all publishers, queries with params
     GET /:id                        # Get publishers by id
     POST /                          # Admin required, Create publishers
+    PUT /:id                        # Admin required, update publishers
     DELETE /:id                     # Admin required
 
 /search

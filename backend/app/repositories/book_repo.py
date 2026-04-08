@@ -1,12 +1,6 @@
 from app.repositories.base_repo import BaseRepo
 from app.models.book import Book
 
-# If we need to make various queries do it like this: !!!!!
-# with database.transaction() as conn:
-#     database.execute("INSERT INTO orders ...", (...), conn=conn)
-#     database.execute("UPDATE inventory ...", (...), conn=conn)
-#     # Both commit together, or both roll back
-
 
 class BookRepo(BaseRepo):
     def get_all_books(self):

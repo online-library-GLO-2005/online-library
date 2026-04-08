@@ -1,12 +1,15 @@
 from functools import wraps
 from app.errors import AppError
 from app.utils.security import is_admin, get_user_id
+from flask_jwt_extended import verify_jwt_in_request
 
 
 ## Put @admin_required above routes that need that permission.
+# Also verifies JWT so @jwt_required is not needed
 def admin_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
+        verify_jwt_in_request()
         if not is_admin():
             raise AppError(403, "User is not admin")
         return f(*args, **kwargs)
@@ -14,9 +17,8 @@ def admin_required(f):
     return decorated
 
 
-# (WIP) TO BE SEEN IF IT WORKS AND IF WE NEED REWORK
 # This guard needs the targeted service to have a method called
-def require_owner_or_admin(service, resource_id_arg="id"):
+def require_owner_or_admin(get_owner_id_fn, resource_id_arg="id"):
     """
     service: the service to fetch the resource
     resource_id_arg: the name of the route argument containing the resource ID
@@ -26,12 +28,19 @@ def require_owner_or_admin(service, resource_id_arg="id"):
         @wraps(f)
         def wrapper(*args, **kwargs):
             resource_id = kwargs.get(resource_id_arg)
-            resource_user_id = service.get_user_id_with_resource_id(resource_id)
+            if resource_id is None:
+                raise AppError(400, "Missing resource id")
 
-            if not resource_user_id:
+            verify_jwt_in_request()
+
+            if is_admin():
+                return f(*args, **kwargs)
+
+            resource_user_id = get_owner_id_fn(resource_id)
+            if resource_user_id is None:
                 raise AppError(404, "Resource not found")
 
-            if not (is_admin() or resource_user_id == get_user_id()):
+            if resource_user_id != get_user_id():
                 raise AppError(403, "User is not owner")
 
             return f(*args, **kwargs)
