@@ -46,7 +46,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./backend
-          file: ./backend/Dockerfiles/Dockerfile.release
+          file: ./backend/Dockerfiles/Dockerfile.prod
           push: true
           tags: ${{ steps.meta-backend.outputs.tags }}
 
@@ -54,6 +54,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./frontend
-          file: ./frontend/Dockerfiles/Dockerfile.release
+          file: ./frontend/Dockerfiles/Dockerfile.prod
           push: true
           tags: ${{ steps.meta-frontend.outputs.tags }}
