@@ -1,5 +1,5 @@
-from backend.app.repositories.base_repo import BaseRepo
-from backend.app.models.comment import Comment
+from app.repositories.base_repo import BaseRepo
+from app.models.comment import Comment
 
 class CommentRepo(BaseRepo):
     def get_by_id(self, comment_id: int) -> Comment | None:

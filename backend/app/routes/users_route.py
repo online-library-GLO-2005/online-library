@@ -1,11 +1,11 @@
 from flask import Blueprint, request
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from backend.app.services.user_service import user_service
-from backend.app.schemas.user_schema import UserSchema
-from backend.app.schemas.book_schema import BookSchema
-from backend.app.schemas.comment_schema import CommentSchema
-from backend.app.utils.apiResponse import success_response
-from backend.app.utils.guards import admin_required
+from app.services.user_service import user_service
+from app.schemas.user_schema import UserSchema
+from app.schemas.book_schema import BookSchema
+from app.schemas.comment_schema import CommentSchema
+from app.utils.apiResponse import success_response
+from app.utils.guards import admin_required
 
 bp = Blueprint("users", __name__, url_prefix="/users")
 

@@ -1,5 +1,5 @@
-from backend.app.repositories.base_repo import BaseRepo
-from backend.app.models.publisher import Publisher
+from app.repositories.base_repo import BaseRepo
+from app.models.publisher import Publisher
 
 class PublisherRepo(BaseRepo):
     def get_all(self):

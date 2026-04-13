@@ -1,5 +1,5 @@
-from backend.app.repositories.base_repo import BaseRepo
-from backend.app.models.user import User
+from app.repositories.base_repo import BaseRepo
+from app.models.user import User
 
 class UserRepo(BaseRepo):
     def get_by_id(self, uid: int) -> User | None:

@@ -1,7 +1,7 @@
 from marshmallow import Schema, fields
 
-from backend.app.schemas.author_schema import AuthorSchema
-from backend.app.schemas.genre_schema import GenreSchema
+from app.schemas.author_schema import AuthorSchema
+from app.schemas.genre_schema import GenreSchema
 
 
 class BookSchema(Schema):

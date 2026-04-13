@@ -48,7 +48,7 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfiles/Dockerfile.prod
           push: true
-          tags: ${{ steps.meta-backend.outputs.tags }}
+          tags: ${{ steps.meta-outputs.tags }}
 
       - name: Build and push frontend
         uses: docker/build-push-action@v6

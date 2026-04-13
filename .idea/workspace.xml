@@ -5,16 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a1876f20-3b71-4455-86a9-ccbed15f2d71" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/app/models/author.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/app/models/comment.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/app/models/genre.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/app/models/publisher.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/app/models/user.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/app/schemas/author_schema.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/app/schemas/comment_schema.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/app/schemas/genre_schema.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/app/schemas/publisher_schema.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/models/book.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/models/book.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.github/workflows/cd.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/cd.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/repositories/author_repo.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/repositories/author_repo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/repositories/book_repo.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/repositories/book_repo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/repositories/comment_repo.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/repositories/comment_repo.py" afterDir="false" />
@@ -29,13 +22,13 @@
       <change beforePath="$PROJECT_DIR$/backend/app/routes/publishers_route.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/routes/publishers_route.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/routes/users_route.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/routes/users_route.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/schemas/book_schema.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/schemas/book_schema.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app/schemas/user_schema.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/schemas/user_schema.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/services/author_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/services/author_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/services/book_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/services/book_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/services/comment_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/services/comment_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/services/genre_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/services/genre_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/services/publisher_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/services/publisher_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/app/services/user_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/services/user_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +87,7 @@
     "Docker.backend/Dockerfile.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "Alain",
+    "git-widget-placeholder": "#12 on Alain",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -147,7 +140,8 @@
       <updated>1775525794681</updated>
       <workItem from="1775525797585" duration="4432000" />
       <workItem from="1776107998597" duration="2569000" />
-      <workItem from="1776110610730" duration="5940000" />
+      <workItem from="1776110610730" duration="6374000" />
+      <workItem from="1776117553188" duration="1679000" />
     </task>
     <servers />
   </component>

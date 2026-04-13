@@ -1,8 +1,8 @@
 from flask import Blueprint, request
-from backend.app.services.book_service import book_service
-from backend.app.utils.apiResponse import success_response
-from backend.app.schemas.book_schema import BookSchema
-from backend.app.utils.guards import admin_required
+from app.services.book_service import book_service
+from app.utils.apiResponse import success_response
+from app.schemas.book_schema import BookSchema
+from app.utils.guards import admin_required
 
 bp = Blueprint("books", __name__, url_prefix="/books")
 

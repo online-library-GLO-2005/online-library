@@ -1,5 +1,5 @@
-from backend.app.repositories.genre_repo import genre_repo
-from backend.app.errors import AppError
+from app.repositories.genre_repo import genre_repo
+from app.errors import AppError
 
 class GenreService:
     def __init__(self):

@@ -1,8 +1,8 @@
 from flask import Blueprint, request
-from backend.app.services.publisher_service import publisher_service
-from backend.app.utils.apiResponse import success_response
-from backend.app.utils.guards import admin_required
-from backend.app.schemas.publisher_schema import PublisherSchema
+from app.services.publisher_service import publisher_service
+from app.utils.apiResponse import success_response
+from app.utils.guards import admin_required
+from app.schemas.publisher_schema import PublisherSchema
 
 bp = Blueprint("publishers", __name__, url_prefix="/publishers")
 

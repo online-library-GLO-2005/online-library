@@ -1,8 +1,8 @@
 from flask import Blueprint, request
-from backend.app.services.comment_service import comment_service
-from backend.app.utils.apiResponse import success_response
-from backend.app.utils.guards import require_owner_or_admin
-from backend.app.schemas.comment_schema import CommentSchema
+from app.services.comment_service import comment_service
+from app.utils.apiResponse import success_response
+from app.utils.guards import require_owner_or_admin
+from app.schemas.comment_schema import CommentSchema
 
 bp = Blueprint("comments", __name__, url_prefix="/comments")
 

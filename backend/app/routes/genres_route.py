@@ -1,8 +1,8 @@
 from flask import Blueprint, request
-from backend.app.services.genre_service import genre_service
-from backend.app.utils.apiResponse import success_response
-from backend.app.utils.guards import admin_required
-from backend.app.schemas.genre_schema import GenreSchema
+from app.services.genre_service import genre_service
+from app.utils.apiResponse import success_response
+from app.utils.guards import admin_required
+from app.schemas.genre_schema import GenreSchema
 
 bp = Blueprint("genres", __name__, url_prefix="/genres")
 

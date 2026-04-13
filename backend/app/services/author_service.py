@@ -1,5 +1,5 @@
-from backend.app.repositories.author_repo import author_repo
-from backend.app.errors import AppError
+from app.repositories.author_repo import author_repo
+from app.errors import AppError
 
 class AuthorService:
     def __init__(self):

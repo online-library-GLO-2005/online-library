@@ -1,6 +1,6 @@
 from ownable_service import OwnableService
-from backend.app.repositories.comment_repo import comment_repo
-from backend.app.errors import AppError
+from app.repositories.comment_repo import comment_repo
+from app.errors import AppError
 
 class CommentService(OwnableService):
     def __init__(self):

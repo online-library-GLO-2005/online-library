@@ -1,6 +1,6 @@
 from .ownable_service import OwnableService
-from backend.app.repositories.user_repo import user_repo
-from backend.app.errors import AppError
+from app.repositories.user_repo import user_repo
+from app.errors import AppError
 from ..models.book import Book
 from ..models.comment import Comment
 

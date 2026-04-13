@@ -6,11 +6,11 @@ from pathlib import Path
 from flask import Blueprint, send_from_directory, request
 from werkzeug.utils import secure_filename
 
-from backend.app.utils.apiResponse import success_response
-from backend.app.utils.guards import admin_required
-from backend.app.errors import AppError
+from app.utils.apiResponse import success_response
+from app.utils.guards import admin_required
+from app.errors import AppError
 
-from backend.app.services import book_service
+from app.services import book_service
 
 # ─────────────────────────────────────────────
 # Paths

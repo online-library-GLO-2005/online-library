@@ -1,5 +1,5 @@
-from backend.app.repositories.book_repo import book_repo
-from backend.app.errors import AppError
+from app.repositories.book_repo import book_repo
+from app.errors import AppError
 from ..models.book import Book
 from ..schemas.book_schema import BookSchema
 

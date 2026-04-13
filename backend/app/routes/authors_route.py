@@ -1,8 +1,8 @@
 from flask import Blueprint, request
-from backend.app.services.author_service import author_service
-from backend.app.utils.apiResponse import success_response
-from backend.app.utils.guards import admin_required
-from backend.app.schemas.author_schema import AuthorSchema
+from app.services.author_service import author_service
+from app.utils.apiResponse import success_response
+from app.utils.guards import admin_required
+from app.schemas.author_schema import AuthorSchema
 
 bp = Blueprint("authors", __name__, url_prefix="/authors")
 

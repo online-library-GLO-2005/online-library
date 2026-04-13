@@ -1,5 +1,5 @@
-from backend.app.repositories.base_repo import BaseRepo
-from backend.app.models.author import Author
+from app.repositories.base_repo import BaseRepo
+from app.models.author import Author
 
 
 class AuthorRepo(BaseRepo):

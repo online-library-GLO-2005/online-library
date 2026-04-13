@@ -1,5 +1,5 @@
-from backend.app.repositories.publisher_repo import publisher_repo
-from backend.app.errors import AppError
+from app.repositories.publisher_repo import publisher_repo
+from app.errors import AppError
 
 class PublisherService:
     def __init__(self):

@@ -1,5 +1,5 @@
-from backend.app.repositories.base_repo import BaseRepo
-from backend.app.models.book import Book
+from app.repositories.base_repo import BaseRepo
+from app.models.book import Book
 
 
 class BookRepo(BaseRepo):
