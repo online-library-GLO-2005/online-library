@@ -10,6 +10,7 @@ services:
       - '5000:5000'   #default flask port
     volumes:
       - ./backend:/app    # Mount code instead of rebuilding
+      - ./backend/media:/app/media # Mount media for persistence and ease of access during development
     env_file:
       - ./backend/.env
     healthcheck:
@@ -43,6 +44,7 @@ services:
   db:
     image: mysql:8    # MySQL version 8
     container_name: mysql-container
+    command: --event-scheduler=ON
     attach: false
     ports:
       - '3306:3306'

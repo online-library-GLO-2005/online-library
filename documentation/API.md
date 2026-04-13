@@ -55,4 +55,17 @@ Update this if there's a smarter and better way:
 
 /search
     GET /?q=...          # search across books, authors, genres, publishers, users
+
+/media
+    GET /books/:filename    # Serves uploaded book files (PDF, etc.)
+    GET /covers/:filename   # Serves uploaded cover images
+    POST /books/            # Upload a book file (admin only)
+    POST /covers/           # Upload a cover image (admin only)
+```
+
+Frontend flow:
+```
+1. Admin uploads PDF    → POST /media/books   → gets back url_contenu
+2. Admin uploads cover  → POST /media/covers  → gets back url_couverture
+3. Admin creates book   → POST /books         → sends all fields including both urls
 ```

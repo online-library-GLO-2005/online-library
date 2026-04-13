@@ -1,1 +1,0 @@
--- TODO: Mainly one book, one publisher, one author, one admin

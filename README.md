@@ -134,6 +134,11 @@ docker-compose down -v
 
 ## 🌐 Servers
 
+Admin connection info:
+- **Username :** admin
+- **Email :** admin@gmail.com
+- **Password :** adminpassword
+
 ### Dev servers
 
 | Service | URL | Notes |

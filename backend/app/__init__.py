@@ -17,6 +17,7 @@ route_modules = [
     "app.routes.publishers_route",
     "app.routes.search_route",
     "app.routes.users_route",
+    "app.routes.media_route",
 ]
 
 

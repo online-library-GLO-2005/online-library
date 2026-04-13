@@ -1,1 +1,0 @@
--- TODO: Calculer la note moyenne d'un livre
