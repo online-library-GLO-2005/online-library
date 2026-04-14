@@ -12,14 +12,14 @@ import hashlib  # For token hashing, protecting against db theft
 
 
 # Generate a refresh token for user, longer-lived
-def generate_refresh_token(user_id: int, is_admin: bool = False) -> str:
+def generate_refresh_token(user_id: str, is_admin: bool = False) -> str:
     return create_refresh_token(
         identity=user_id, additional_claims={"is_admin": is_admin}
     )
 
 
 # Generate a short-lived access token (e.g., 15 min)
-def generate_access_token(user_id: int, is_admin: bool = False) -> str:
+def generate_access_token(user_id: str, is_admin: bool = False) -> str:
     return create_access_token(
         identity=user_id, additional_claims={"is_admin": is_admin}
     )
@@ -32,7 +32,7 @@ def hash_token(token: str) -> str:
 
 
 # Get user id from jwt token, the token is passed through the decorator of the route @jwt_required()
-def get_user_id() -> int:
+def get_user_id() -> str:
     return get_jwt_identity()
 
 
