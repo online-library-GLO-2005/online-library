@@ -1,8 +1,12 @@
+import logging
 from marshmallow import ValidationError
 from flask_jwt_extended.exceptions import JWTExtendedException
 from app.errors import AppError
 from app.utils.apiResponse import error_response
 from werkzeug.exceptions import HTTPException
+from pymysql import MySQLError
+
+logger = logging.getLogger(__name__)
 
 
 def register_error_handlers(app):
@@ -18,6 +22,12 @@ def register_error_handlers(app):
     def handle_validation_error(e: ValidationError):
         return error_response(400, e.messages)
 
+    # MySQL error
+    @app.errorhandler(MySQLError)
+    def handle_mysql_error(e):
+        logger.error(f"MySQL error: {e}")
+        return error_response(500, "Database error")
+
     # Custom application error class
     @app.errorhandler(AppError)
     def handle_app_error(e: AppError):
@@ -30,4 +40,6 @@ def register_error_handlers(app):
         if isinstance(e, HTTPException):
             # Every HTTPException
             return error_response(e.code or 500, e.description)
+
+        logger.error(f"Unhandled error: {e}")
         return error_response(500, "Internal server error")

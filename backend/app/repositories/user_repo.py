@@ -2,6 +2,7 @@ from app.repositories.base_repo import BaseRepo
 from app.models.user import User
 from app.models.book import Book
 
+
 class UserRepo(BaseRepo):
     def get_by_id(self, uid: int) -> User | None:
         query = f"SELECT * FROM {User.TABLE} WHERE {User.Columns.ID} = %s"
@@ -57,5 +58,20 @@ class UserRepo(BaseRepo):
     def get_user_comments(self, uid: int):
         query = "SELECT * FROM Commentaire WHERE UID = %s"
         return self._db.execute(query, (uid,))
+
+    def is_admin(self, uid: int) -> bool:
+        query = f"""
+            SELECT 1
+            FROM {User.Admin_TABLE}
+            WHERE {User.Columns.ID} = %s
+        """
+        rows = self._db.execute(query, (uid,))
+        return bool(rows)
+
+    def get_all_users(self):
+        query = f"SELECT * FROM {User.TABLE}"
+        rows = self._db.execute(query)
+        return [User.from_dict(r) for r in rows] if rows else []
+
 
 user_repo = UserRepo()

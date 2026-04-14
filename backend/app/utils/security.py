@@ -3,6 +3,7 @@ from flask_jwt_extended import (
     create_refresh_token,
     get_jwt_identity,
     get_jwt,
+    decode_token,
 )
 import bcrypt  # Password hashing, a lot of protection against brute force AND db theft
 import hashlib  # For token hashing, protecting against db theft
@@ -28,7 +29,12 @@ def generate_access_token(user_id: str, is_admin: bool = False) -> str:
 # Hash token with SHA256 which is faster and a slight protection against DB theft
 # This is a deterministic hashing, so we can always find the same token by hashing what is sent
 def hash_token(token: str) -> str:
-    return str(hashlib.sha256(token.encode()).hexdigest)
+    return hashlib.sha256(token.encode()).hexdigest()
+
+
+# Get JWT ID (jti) from token, used for refresh token management (e.g., revocation)
+def get_jti(token: str) -> str:
+    return decode_token(token)["jti"]
 
 
 # Get user id from jwt token, the token is passed through the decorator of the route @jwt_required()
@@ -37,7 +43,7 @@ def get_user_id() -> str:
 
 
 # Verify if admin from jwt token, the token is passed through the decorator of the route @jwt_required()
-def is_admin() -> bool:
+def is_admin_from_jwt() -> bool:
     jwt_data = get_jwt()
     return bool(jwt_data.get("is_admin", False))
 

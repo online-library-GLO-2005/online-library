@@ -1,4 +1,5 @@
 from app.infrastructure.db import database
+from app.models.user import User
 
 
 class BaseRepo:

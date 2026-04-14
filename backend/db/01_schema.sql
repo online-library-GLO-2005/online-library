@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS Administrateur (
 CREATE TABLE IF NOT EXISTS Refresh_tokens (
     TID         INT          NOT NULL AUTO_INCREMENT,
     UID         INT          NOT NULL,
+    jti         VARCHAR(255) NOT NULL UNIQUE, -- JWT ID
     token_hash  VARCHAR(255) NOT NULL,
     expires_at  DATETIME     NOT NULL,
     revoked     BOOLEAN      NOT NULL DEFAULT FALSE,
@@ -103,8 +104,8 @@ CREATE TABLE IF NOT EXISTS Refresh_tokens (
 -- Also used when fetching all tokens for a given user (e.g. logout-all).
 CREATE INDEX idx_refresh_tokens_uid ON Refresh_tokens (UID);
 
--- Speeds up token validation: WHERE token_hash = ? AND revoked = FALSE AND expires_at > NOW()
-CREATE INDEX idx_refresh_tokens_hash ON Refresh_tokens (token_hash);
+-- Speeds up token validation: WHERE jti = ? AND revoked = FALSE AND expires_at > NOW()
+CREATE INDEX idx_refresh_token_validation ON Refresh_tokens (jti, revoked, expires_at);
 
 -- Useful for the TODO cleanup trigger / scheduled purge job: WHERE expires_at < NOW()
 CREATE INDEX idx_refresh_tokens_expires ON Refresh_tokens (expires_at);
