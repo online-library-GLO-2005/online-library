@@ -47,7 +47,7 @@ def refresh():
 
     access_token = auth_service.refresh_token(refresh_token, is_admin=is_admin)
 
-    return success_response(200, {"access_token": access_token})
+    return success_response(200, access_token)
 
 
 @bp.post("/promote/<int:uid>")
