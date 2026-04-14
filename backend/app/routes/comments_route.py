@@ -1,8 +1,10 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from app.services.comment_service import comment_service
 from app.utils.apiResponse import success_response
 from app.utils.guards import require_owner_or_admin
 from app.schemas.comment_schema import CommentSchema
+
+from app.schemas import comment_schema
 
 bp = Blueprint("comments", __name__, url_prefix="/comments")
 
@@ -18,3 +20,4 @@ def update_comment(id):
 def delete_comment(id):
     comment_service.delete_comment(id)
     return success_response(200, None, "Commentaire supprimé")
+

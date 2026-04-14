@@ -7,10 +7,9 @@ from app.schemas.author_schema import AuthorSchema
 bp = Blueprint("authors", __name__, url_prefix="/authors")
 
 @bp.get("/")
-def get_all():
-    search_name = request.args.get('nom')
-    authors = author_service.get_authors(search_name)
-    return success_response(200, AuthorSchema(many=True).dump(authors), "Liste des auteurs récupérée")
+def get_authors():
+    authors = author_service.get_authors()
+    return success_response(200, authors, "Succès")
 
 @bp.get("/<int:id>")
 def get_by_id(id):

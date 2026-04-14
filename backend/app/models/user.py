@@ -23,3 +23,18 @@ class User:
     phone: str = None
     address: str = None
     created_at: datetime = None
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        if not data:
+            return None
+        return cls(
+            id=data.get(cls.Columns.ID),
+            name=data.get(cls.Columns.NAME),
+            email=data.get(cls.Columns.EMAIL),
+            password_hash=data.get(cls.Columns.PASSWORD),
+            birth_date=data.get(cls.Columns.BIRTH_DATE),
+            phone=data.get(cls.Columns.PHONE),
+            address=data.get(cls.Columns.ADDRESS),
+            created_at=data.get(cls.Columns.CREATED_AT)
+        )

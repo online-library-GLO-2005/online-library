@@ -1,4 +1,4 @@
-from ownable_service import OwnableService
+from app.services.ownable_service import OwnableService
 from app.repositories.comment_repo import comment_repo
 from app.errors import AppError
 
@@ -21,5 +21,8 @@ class CommentService(OwnableService):
 
     def delete_comment(self, comment_id):
         self._repo.delete(comment_id)
+
+    def get_comments_by_book(self, lid: int):
+        return self._repo.get_by_book(lid)
 
 comment_service = CommentService()

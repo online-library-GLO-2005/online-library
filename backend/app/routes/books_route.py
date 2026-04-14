@@ -1,8 +1,13 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from app.services.book_service import book_service
 from app.utils.apiResponse import success_response
 from app.schemas.book_schema import BookSchema
 from app.utils.guards import admin_required
+
+from app.schemas import comment_schema
+from app.services.comment_service import comment_service
+
+from app.schemas.comment_schema import CommentSchema
 
 bp = Blueprint("books", __name__, url_prefix="/books")
 
@@ -10,7 +15,6 @@ bp = Blueprint("books", __name__, url_prefix="/books")
 @bp.get("/")
 def get_all():
     books = book_service.get_books()
-    # On utilise many=True car c'est une liste
     return success_response(200, BookSchema(many=True).dump(books), "Livres récupérés")
 
 
@@ -46,3 +50,10 @@ def link_genre_to_book(lid, gid):
 def get_book_full_details(id):
     detailed_book = book_service.get_book_details(id)
     return success_response(200, detailed_book, "Détails du livre récupérés")
+
+# Utilise la classe directement pour créer l'instance
+@bp.route('/<int:lid>/comments', methods=['GET'])
+def get_book_comments(lid):
+    comments = comment_service.get_comments_by_book(lid)
+    schema = CommentSchema(many=True)
+    return jsonify(schema.dump(comments)), 200

@@ -6,12 +6,14 @@ class BookRepo(BaseRepo):
     def get_all_books(self):
         query = f"SELECT * FROM {Book.TABLE}"
         rows = self._db.execute(query)
-        return [Book(**row) for row in rows] if rows else []
+        # MODIFICATION : Utilisation de from_dict au lieu de **row
+        return [Book.from_dict(row) for row in rows] if rows else []
 
     def get_by_id(self, book_id: int) -> Book | None:
         query = f"SELECT * FROM {Book.TABLE} WHERE {Book.Columns.ID} = %s"
         rows = self._db.execute(query, (book_id,))
-        return Book(**rows[0]) if rows else None
+        # MODIFICATION : Utilisation de from_dict ici aussi
+        return Book.from_dict(rows[0]) if rows else None
 
     def create_book(self, data: dict):
         check_query = f"SELECT COUNT(*) as count FROM {Book.TABLE} WHERE {Book.Columns.TITLE} LIKE %s"
@@ -68,4 +70,5 @@ class BookRepo(BaseRepo):
             WHERE c.LID = %s
         """
         return self._db.execute(query, (lid,))
+
 book_repo = BookRepo()

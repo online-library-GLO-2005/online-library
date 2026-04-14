@@ -25,3 +25,18 @@ class Book:
     cover_url: str = None
     content_url: str = None
     rating: float = None
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        """Crée une instance de Book à partir d'un dictionnaire de la DB."""
+        return cls(
+            id=data.get(cls.Columns.ID),
+            eid=data.get(cls.Columns.EID),
+            isbn=data.get(cls.Columns.ISBN),
+            title=data.get(cls.Columns.TITLE),
+            pub_date=data.get(cls.Columns.PUB_DATE),
+            description=data.get(cls.Columns.DESCRIPTION),
+            cover_url=data.get(cls.Columns.COVER_URL),
+            content_url=data.get(cls.Columns.CONTENT_URL),
+            rating=data.get(cls.Columns.RATING)
+        )

@@ -1,8 +1,7 @@
-from .ownable_service import OwnableService
+from app.services.ownable_service import OwnableService
 from app.repositories.user_repo import user_repo
 from app.errors import AppError
-from ..models.book import Book
-from ..models.comment import Comment
+
 
 
 class UserService(OwnableService):
@@ -27,11 +26,11 @@ class UserService(OwnableService):
 
     def get_history(self, uid: int):
         books_data = self._repo.get_consulted_books(uid)
-        return [Book(**b) for b in books_data]
+        return books_data
 
     def get_favorites(self, uid: int):
         books_data = self._repo.get_favorite_books(uid)
-        return [Book(**b) for b in books_data]
+        return books_data
 
     def toggle_favorite(self, uid: int, lid: int, is_fav: bool):
         if is_fav:
@@ -41,6 +40,6 @@ class UserService(OwnableService):
 
     def get_my_comments(self, uid: int):
         comments_data = self._repo.get_user_comments(uid)
-        return [Comment(**c) for c in comments_data]
+        return comments_data
 
 user_service = UserService()
