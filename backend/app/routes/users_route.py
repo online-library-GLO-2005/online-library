@@ -1,77 +1,59 @@
 from flask import Blueprint, request
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.services.user_service import user_service
-from flask_jwt_extended import jwt_required
+from app.schemas.user_schema import UserSchema
+from app.schemas.book_schema import BookSchema
+from app.schemas.comment_schema import CommentSchema
 from app.utils.apiResponse import success_response
-from app.utils.guards import require_owner_or_admin
+from app.utils.guards import admin_required
 
 bp = Blueprint("users", __name__, url_prefix="/users")
 
+# --- PROFIL PERSO ---
 
-# PLACEHOLDER - allows queries
-@bp.get("/")
-def get_all():
-    message = f"Endpoint get /{bp.name} called"
-    return success_response(201, None, message)
-
-
-# PLACEHOLDER
-@bp.get("/:id")
-def get_by_id():
-    message = f"Endpoint get /{bp.name}/:id called"
-    return success_response(201, None, message)
-
-
-# PLACEHOLDER - gets user(me) with token
 @bp.get("/me")
 @jwt_required()
 def get_me():
-    message = f"Endpoint get /{bp.name}/me called"
-    return success_response(201, None, message)
+    user = user_service.get_user_profile(get_jwt_identity())
+    return success_response(200, UserSchema().dump(user), "Profil récupéré")
 
-
-# PLACEHOLDER - gets user(me) comments
 @bp.get("/me/comments")
 @jwt_required()
-def get_comments():
-    message = f"Endpoint get /{bp.name}/me/comments called"
-    return success_response(201, None, message)
+def get_my_comments():
+    comments = user_service.get_my_comments(get_jwt_identity())
+    return success_response(200, CommentSchema(many=True).dump(comments), "Mes commentaires")
 
+# --- GESTION DES LIVRES (Favoris / Consultés) ---
 
-# PLACEHOLDER - gets user(me) saved books
 @bp.get("/me/books")
 @jwt_required()
-def get_books():
-    message = f"Endpoint get /{bp.name}/me/books called"
-    return success_response(201, None, message)
+def get_my_history():
+    books = user_service.get_history(get_jwt_identity())
+    return success_response(200, BookSchema(many=True).dump(books), "Historique de lecture")
 
-
-# PLACEHOLDER - post user(me) saved books
-@bp.post("/me/books")
+@bp.get("/me/favorites")
 @jwt_required()
-def add_book():
-    message = f"Endpoint post /{bp.name}/me/books called"
-    return success_response(201, None, message)
+def get_my_favorites():
+    books = user_service.get_favorites(get_jwt_identity())
+    return success_response(200, BookSchema(many=True).dump(books), "Mes favoris")
 
-
-# PLACEHOLDER - delete user(me) saved books
-@bp.delete("/me/books/:id")
+@bp.post("/me/favorites")
 @jwt_required()
-def delete_book():
-    message = f"Endpoint delete /{bp.name}/me/books/:id called"
-    return success_response(201, None, message)
+def add_favorite():
+    lid = request.json.get("book_id")
+    user_service.toggle_favorite(get_jwt_identity(), lid, True)
+    return success_response(201, None, "Livre ajouté aux favoris")
 
+@bp.delete("/me/favorites/<int:book_id>")
+@jwt_required()
+def remove_favorite(book_id):
+    user_service.toggle_favorite(get_jwt_identity(), book_id, False)
+    return success_response(200, None, "Livre retiré des favoris")
 
-# PLACEHOLDER - update user(me) if owner, and admin can update anyone
-@bp.put("/:id")
-@require_owner_or_admin(user_service.get_owner_id)
-def update_user():
-    message = f"Endpoint put /{bp.name}/:id called"
-    return success_response(201, None, message)
+# --- ADMIN / USERS ---
 
-
-# PLACEHOLDER - update user(me) if owner, and admin can update anyone
-@bp.delete("/:id")
-@require_owner_or_admin(user_service.get_owner_id)
-def delete_user():
-    message = f"Endpoint delete /{bp.name}/:id called"
-    return success_response(201, None, message)
+@bp.get("/")
+@admin_required
+def get_all():
+    users = user_service.get_all_users()
+    return success_response(200, UserSchema(many=True).dump(users))

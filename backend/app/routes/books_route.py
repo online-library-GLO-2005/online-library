@@ -1,71 +1,59 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from app.services.book_service import book_service
-from flask_jwt_extended import jwt_required
-from app.utils.guards import admin_required
 from app.utils.apiResponse import success_response
 from app.schemas.book_schema import BookSchema
+from app.utils.guards import admin_required
 
-# from app.services.book_service import insert_book, get_books
+from app.schemas import comment_schema
+from app.services.comment_service import comment_service
 
+from app.schemas.comment_schema import CommentSchema
 
 bp = Blueprint("books", __name__, url_prefix="/books")
 
 
-# PLACEHOLDER
-# Should accept queries
 @bp.get("/")
 def get_all():
-    message = f"Endpoint get /{bp.name} called"
-    return success_response(201, None, message)
+    books = book_service.get_books()
+    return success_response(200, BookSchema(many=True).dump(books), "Livres récupérés")
 
 
-# PLACEHOLDER
-# Should accept queries
-@bp.get("/:id")
-def get_by_id():
-    message = f"Endpoint get /{bp.name}/:id called"
-    return success_response(201, None, message)
+@bp.get("/<int:book_id>")
+def get_by_id(book_id):
+    book = book_service.get_book_by_id(book_id)
+    return success_response(200, BookSchema().dump(book), "Livre trouvé")
 
 
 @bp.post("/")
 @admin_required
 def add_book():
-    # schema = BookSchema()
-    # data = schema.load(request.json)
+    schema = BookSchema()
+    data = schema.load(request.json)
 
-    # Call service logic
-    # dump with marshmallow
-    # Replace "None" here with the marshmallow result
-    message = f"Endpoint post /{bp.name} called"
-    return success_response(201, None, message)
+    new_book = book_service.insert_book(data)
 
+    return success_response(201, schema.dump(new_book), "Livre créé avec succès")
 
-# PLACEHOLDER
-@bp.put("/:id")
+@bp.post("/<int:lid>/authors/<int:aid>")
 @admin_required
-def update_book():
-    message = f"Endpoint put /{bp.name}/:id called"
-    return success_response(201, None, message)
+def link_author_to_book(lid, aid):
+    book_service.link_author(lid, aid)
+    return success_response(201, None, "Auteur lié au livre")
 
-
-# PLACEHOLDER
-@bp.delete("/:id")
+@bp.post("/<int:lid>/genres/<int:gid>")
 @admin_required
-def delete_book():
-    message = f"Endpoint delete /{bp.name}/:id called"
-    return success_response(201, None, message)
+def link_genre_to_book(lid, gid):
+    book_service.link_genre(lid, gid)
+    return success_response(201, None, "Genre lié au livre")
 
+@bp.get("/<int:id>")
+def get_book_full_details(id):
+    detailed_book = book_service.get_book_details(id)
+    return success_response(200, detailed_book, "Détails du livre récupérés")
 
-# PLACEHOLDER
-@bp.get("/:id/comments")
-def get_book_comments():
-    message = f"Endpoint get /{bp.name}/:id/comments called"
-    return success_response(201, None, message)
-
-
-# PLACEHOLDER
-@bp.post("/:id/comments")
-@jwt_required()
-def add_book_comment():
-    message = f"Endpoint post /{bp.name}/:id/comments called"
-    return success_response(201, None, message)
+# Utilise la classe directement pour créer l'instance
+@bp.route('/<int:lid>/comments', methods=['GET'])
+def get_book_comments(lid):
+    comments = comment_service.get_comments_by_book(lid)
+    schema = CommentSchema(many=True)
+    return jsonify(schema.dump(comments)), 200

@@ -1,0 +1,206 @@
+Index: backend/app/routes/books.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from flask import Blueprint, request, jsonify\r\nfrom app.services.book_service import insert_book, get_books\r\nfrom app.schemas.book_schema import BookCreateSchema, BookResponseSchema\r\n\r\nbp = Blueprint(\"books\", __name__, url_prefix=\"/books\")\r\n\r\n@bp.get(\"/books\")\r\ndef list_books():\r\n    return jsonify(get_books())\r\n\r\n@bp.post(\"/books\")\r\ndef add_book():\r\n    schema = BookCreateSchema()\r\n    data = schema.load(request.json)\r\n\r\n    insert_book(data[\"title\"], data.get(\"author_id\"))\r\n    return {\"message\": \"Book added\"}, 201
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/app/routes/books.py b/backend/app/routes/books.py
+--- a/backend/app/routes/books.py	(revision 97f0b4a1c6015a93698c1f501f4ebdac40587cb9)
++++ b/backend/app/routes/books.py	(date 1775528863796)
+@@ -1,6 +1,6 @@
+ from flask import Blueprint, request, jsonify
+-from app.services.book_service import insert_book, get_books
+-from app.schemas.book_schema import BookCreateSchema, BookResponseSchema
++from backend.app.services.book_service import insert_book, get_books
++from backend.app.schemas.book_schema import BookCreateSchema, BookResponseSchema
+ 
+ bp = Blueprint("books", __name__, url_prefix="/books")
+ 
+@@ -8,6 +8,10 @@
+ def list_books():
+     return jsonify(get_books())
+ 
++@bp.get("/books/{book_name}")
++def get_book(book_name):
++    return jsonify(get_book(book_name))
++
+ @bp.post("/books")
+ def add_book():
+     schema = BookCreateSchema()
+Index: backend/app/extensions.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pymysql.cursors\r\nfrom flask_marshmallow import Marshmallow\r\nfrom flask_jwt_extended import JWTManager\r\n\r\nma = Marshmallow()\r\njwt = JWTManager()\r\n\r\ndef get_connection():\r\n    return pymysql.connect(\r\n        host='localhost',\r\n        user='root',\r\n        password='',  # Mettre mot de passe ici\r\n        db='onlineLibrary',   # DB name\r\n        autocommit=True,\r\n        cursorclass=pymysql.cursors.DictCursor\r\n    )
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/app/extensions.py b/backend/app/extensions.py
+--- a/backend/app/extensions.py	(revision 97f0b4a1c6015a93698c1f501f4ebdac40587cb9)
++++ b/backend/app/extensions.py	(date 1775527848126)
+@@ -7,10 +7,11 @@
+ 
+ def get_connection():
+     return pymysql.connect(
+-        host='localhost',
+-        user='root',
+-        password='',  # Mettre mot de passe ici
+-        db='onlineLibrary',   # DB name
+-        autocommit=True,
+-        cursorclass=pymysql.cursors.DictCursor
++    host='db',
++    user='root',
++    password='example',
++    db='only_library',
++    charset='utf8mb4',
++    cursorclass=pymysql.cursors.DictCursor,
++    autocommit=True
+     )
+\ No newline at end of file
+Index: backend/app/schemas/book_schema.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from app.extensions import ma\r\nfrom marshmallow import fields\r\n\r\nclass BookCreateSchema(ma.Schema):\r\n    title = fields.Str(required=True)\r\n    description = fields.Str()\r\n\r\nclass BookResponseSchema(ma.Schema):\r\n    id = fields.Int()\r\n    title = fields.Str()\r\n    description = fields.Str()
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/app/schemas/book_schema.py b/backend/app/schemas/book_schema.py
+--- a/backend/app/schemas/book_schema.py	(revision 97f0b4a1c6015a93698c1f501f4ebdac40587cb9)
++++ b/backend/app/schemas/book_schema.py	(date 1775528515365)
+@@ -1,4 +1,4 @@
+-from app.extensions import ma
++from backend.app.extensions import ma
+ from marshmallow import fields
+ 
+ class BookCreateSchema(ma.Schema):
+Index: backend/app/services/book_service.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from app.repositories.book_repo import get_all_books, create_book\r\n\r\ndef insert_book(title, author_id=None):\r\n    return create_book(title, author_id)\r\n\r\ndef get_books():\r\n    return get_all_books()
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/app/services/book_service.py b/backend/app/services/book_service.py
+--- a/backend/app/services/book_service.py	(revision 97f0b4a1c6015a93698c1f501f4ebdac40587cb9)
++++ b/backend/app/services/book_service.py	(date 1775528515349)
+@@ -1,7 +1,10 @@
+-from app.repositories.book_repo import get_all_books, create_book
++from backend.app.repositories.book_repo import get_all_books, create_book, get_book
+ 
+ def insert_book(title, author_id=None):
+     return create_book(title, author_id)
+ 
+ def get_books():
+-    return get_all_books()
+\ No newline at end of file
++    return get_all_books()
++
++def get_book(title):
++    return get_book(title)
+\ No newline at end of file
+Index: backend/app/repositories/book_repo.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from app.extensions import get_connection\r\nfrom app.utils.errors import AppError\r\n\r\ndef get_all_books():\r\n    try:\r\n        connection = get_connection()\r\n        with connection.cursor() as cursor:\r\n            cursor.execute(\"SELECT id, title, author_id FROM books\")\r\n            return cursor.fetchall()\r\n    except Exception:\r\n        raise AppError(\"Database error\")\r\n\r\ndef create_book(title, author_id):\r\n    try:\r\n        connection = get_connection()\r\n        with connection.cursor() as cursor:\r\n            sql = \"INSERT INTO books (title, author_id) VALUES (%s, %s)\"\r\n            cursor.execute(sql, (title, author_id))\r\n    except Exception:\r\n        raise AppError(\"Database error\")
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/app/repositories/book_repo.py b/backend/app/repositories/book_repo.py
+--- a/backend/app/repositories/book_repo.py	(revision 97f0b4a1c6015a93698c1f501f4ebdac40587cb9)
++++ b/backend/app/repositories/book_repo.py	(date 1775528515376)
+@@ -1,5 +1,6 @@
+-from app.extensions import get_connection
+-from app.utils.errors import AppError
++from backend.app.extensions import get_connection
++from backend.app.utils.errors import AppError
++
+ 
+ def get_all_books():
+     try:
+@@ -9,6 +10,15 @@
+             return cursor.fetchall()
+     except Exception:
+         raise AppError("Database error")
++
++def get_book(title):
++    try:
++        connection = get_connection()
++        with connection.cursor() as cursor:
++            cursor.execute("SELECT id, title, author_id FROM books WHERE title=%s", (title,))
++            return cursor.fetchone()
++    except Exception:
++        raise AppError("Database error")
+ 
+ def create_book(title, author_id):
+     try:
+Index: compose.yml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Compile and exec 3 servers: frontend with React, backend with python Flask, and MySQL as database\r\n\r\nservices:\r\n  backend:\r\n    container_name: flask-container\r\n    build: ./backend\r\n    ports:\r\n      - '5000:5000'   #default flask port\r\n    volumes: # Remove in production\r\n      - ./backend:/app    # Mount code instead of rebuilding\r\n    healthcheck:\r\n      test: [\"CMD\", \"python\", \"-c\", \"import urllib.request; urllib.request.urlopen('http://localhost:5000/health', timeout=2)\"]\r\n      interval: 5s\r\n      timeout: 30s\r\n      retries: 6\r\n      start_period: 30s\r\n    depends_on:\r\n      db:\r\n        condition: service_healthy\r\n    restart: on-failure\r\n\r\n  frontend:\r\n    container_name: react-container\r\n    build: ./frontend\r\n    ports:\r\n      - '3000:3000'   #default react port\r\n    volumes: # Remove in production\r\n      - ./frontend:/app\r\n      - /app/node_modules\r\n    depends_on:\r\n      backend:\r\n        condition: service_healthy\r\n    restart: on-failure\r\n\r\n  db:\r\n    image: mysql:8    # MySQL version 8\r\n    container_name: mysql-container\r\n    ports: # Comment this if we don't need to use mysql db with mysql workbench\r\n      - '3306:3306'\r\n    environment:\r\n      MYSQL_ROOT_PASSWORD: example\r\n      MYSQL_DATABASE: online_library\r\n    volumes:\r\n      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql\r\n      - mysql_data:/var/lib/mysql\r\n    healthcheck:\r\n      test: [\"CMD-SHELL\", \"mysqladmin ping -h localhost -p$$MYSQL_ROOT_PASSWORD\"]\r\n      interval: 5s\r\n      timeout: 30s\r\n      retries: 6\r\n      start_period: 30s\r\n    restart: on-failure\r\n\r\nvolumes:\r\n  mysql_data:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/compose.yml b/compose.yml
+--- a/compose.yml	(revision 97f0b4a1c6015a93698c1f501f4ebdac40587cb9)
++++ b/compose.yml	(date 1775526826880)
+@@ -36,7 +36,7 @@
+     image: mysql:8    # MySQL version 8
+     container_name: mysql-container
+     ports: # Comment this if we don't need to use mysql db with mysql workbench
+-      - '3306:3306'
++      - '3307:3306'
+     environment:
+       MYSQL_ROOT_PASSWORD: example
+       MYSQL_DATABASE: online_library
+Index: backend/db/connection.py
+===================================================================
+diff --git a/backend/db/connection.py b/backend/db/connection.py
+deleted file mode 100644
+--- a/backend/db/connection.py	(revision 97f0b4a1c6015a93698c1f501f4ebdac40587cb9)
++++ /dev/null	(revision 97f0b4a1c6015a93698c1f501f4ebdac40587cb9)
+@@ -1,10 +0,0 @@
+-import pymysql.cursors
+-#
+-# connection = pymysql.connect(
+-#     host='localhost',
+-#     user='root',
+-#     password='all0star1',
+-#     db='only_library',
+-#     autocommit=True
+-# )
+-
+Index: backend/requirements.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Core web framework\r\nFlask==2.3.3\r\n\r\n# MySQL driver (raw SQL queries, no ORM)\r\nPyMySQL==1.1.1\r\n\r\n# Data validation and serialization (DTOs)\r\nmarshmallow==3.21.1\r\n\r\n# JWT authentication (login, access tokens, protected routes)\r\nFlask-JWT-Extended==4.6.0\r\n\r\n# Password hashing (secure storage of passwords)\r\nbcrypt==4.0.1\r\n\r\n# Load environment variables from .env file\r\npython-dotenv==1.0.1\r\n\r\n# Enable CORS (allow frontend like React to call API)\r\nFlask-Cors==4.0.0\r\n\r\n# Testing framework\r\npytest==8.3.1\r\npytest-mock==3.14.0\r\n\r\n# Production WSGI server (run app outside Flask dev server)\r\ngunicorn==22.0.0
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/requirements.txt b/backend/requirements.txt
+--- a/backend/requirements.txt	(revision 97f0b4a1c6015a93698c1f501f4ebdac40587cb9)
++++ b/backend/requirements.txt	(date 1775527274540)
+@@ -6,6 +6,8 @@
+ 
+ # Data validation and serialization (DTOs)
+ marshmallow==3.21.1
++flask-marshmallow==0.15.0
++marshmallow-sqlalchemy==0.29.0
+ 
+ # JWT authentication (login, access tokens, protected routes)
+ Flask-JWT-Extended==4.6.0
+Index: backend/db/init.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>USE online_library;\r\n\r\nCREATE TABLE IF NOT EXISTS Utilisateur (UID char(200), nom varchar(200), date_naissance DATE, telephone varchar(20), adresse varchar(255)\r\n                                       , date_creation DATETIME DEFAULT CURRENT_TIMESTAMP, mot_de_passe varchar(255), email varchar(200),\r\n                                        PRIMARY KEY (UID));\r\n\r\nCREATE TABLE IF NOT EXISTS client (UID char(200), PRIMARY KEY (UID), FOREIGN KEY (UID) REFERENCES Utilisateur(UID)\r\n                                  ON UPDATE CASCADE\r\n                                  ON DELETE CASCADE );\r\n\r\n\r\nCREATE TABLE IF NOT EXISTS Administrateur (UID char(200), PRIMARY KEY (UID), FOREIGN KEY (UID) REFERENCES Utilisateur(UID)\r\n                                  ON UPDATE CASCADE\r\n                                  ON DELETE CASCADE );\r\n\r\nCREATE TABLE IF NOT EXISTS Livre (ISBN char(200),nom varchar(255), genre varchar(100), description TEXT,\r\n                                    URL_couverture varchar(500), URL_du_contenu varchar(500), note integer,\r\n                                    PRIMARY KEY (ISBN));\r\n\r\nCREATE TABLE IF NOT EXISTS Commentaire (date_publication DATETIME, CID char(200), message TEXT,\r\n                                    PRIMARY KEY (CID));\r\n\r\nCREATE TABLE IF NOT EXISTS Publier (Uid char(200), CID char(200),\r\n                                    PRIMARY KEY (Uid,CID),\r\n                                    FOREIGN KEY (Uid) REFERENCES Utilisateur(UID)\r\n                                   ON UPDATE CASCADE\r\n                                   ON DELETE CASCADE ,\r\n                                    FOREIGN KEY (CID) REFERENCES Commentaire(CID)\r\n                                   ON UPDATE CASCADE\r\n                                   ON DELETE CASCADE );\r\n\r\nCREATE TABLE IF NOT EXISTS Recevoir (ISBN char(200), CID char(200),\r\n                                    PRIMARY KEY (ISBN,CID),\r\n                                    FOREIGN KEY (ISBN) REFERENCES Livre(ISBN)\r\n                                   ON UPDATE CASCADE\r\n                                   ON DELETE CASCADE ,\r\n                                    FOREIGN KEY (CID) REFERENCES Commentaire(CID)\r\n                                   ON UPDATE CASCADE\r\n                                   ON DELETE CASCADE);\r\n\r\nCREATE TABLE IF NOT EXISTS Noter (\r\n    LID char(200),\r\n    UID char(200),\r\n    Note integer,\r\n    PRIMARY KEY (LID, UID),\r\n    FOREIGN KEY (LID) REFERENCES Livre(ISBN)\r\n        ON UPDATE CASCADE\r\n        ON DELETE CASCADE, -- Cette virgule est correcte car une autre contrainte suit\r\n    FOREIGN KEY (UID) REFERENCES Utilisateur(UID)\r\n        ON UPDATE CASCADE\r\n        ON DELETE CASCADE  -- <--- PAS DE VIRGULE ICI\r\n);\r\n\r\nCREATE TABLE IF NOT EXISTS Consulter (LID char(200), UID char(200), Date_de_consultation DATETIME DEFAULT CURRENT_TIMESTAMP, Derniere_page_consultee integer,\r\n                                PRIMARY KEY (LID, UID),\r\n                                FOREIGN KEY (LID) REFERENCES Livre(ISBN)\r\n                                ON UPDATE CASCADE\r\n                                ON DELETE CASCADE,\r\n                                 FOREIGN KEY (UID) REFERENCES Utilisateur(UID)\r\n                                ON UPDATE CASCADE\r\n                                ON DELETE CASCADE);\r\n\r\nCREATE TABLE IF NOT EXISTS Suit (LID char(200), UID char(200), Favoris boolean,\r\n                                PRIMARY KEY (LID, UID),\r\n                                FOREIGN KEY (LID) REFERENCES Livre(ISBN)\r\n                                ON UPDATE CASCADE\r\n                                ON DELETE CASCADE,\r\n                                 FOREIGN KEY (UID) REFERENCES Utilisateur(UID)\r\n                                ON UPDATE CASCADE\r\n                                ON DELETE CASCADE);\r\n\r\n\r\nCREATE TABLE IF NOT EXISTS Auteur (AID char(200), Description char(200),\r\n                                PRIMARY KEY (AID));\r\n\r\nCREATE TABLE IF NOT EXISTS Ecrit (AID char(200), ISBN char(200),\r\n                                 PRIMARY KEY (AID,ISBN),\r\n                                 FOREIGN KEY (AID) REFERENCES Auteur(AID)\r\n                                 ON UPDATE CASCADE\r\n                                 ON DELETE CASCADE,\r\n                                 FOREIGN KEY (ISBN) REFERENCES Livre(ISBN)\r\n                                 ON UPDATE CASCADE\r\n                                 ON DELETE CASCADE\r\n                                 );\r\n\r\nCREATE TABLE IF NOT EXISTS Editeur (PID char(200), Description char(200)\r\n                                   ,PRIMARY KEY (PID));\r\n\r\nCREATE TABLE IF NOT EXISTS Publie (PID char(200), ISBN char(200), Date_de_Publication DATE,\r\n                                 PRIMARY KEY (PID,ISBN),\r\n                                 FOREIGN KEY (PID) REFERENCES Editeur(PID)\r\n                                 ON UPDATE CASCADE\r\n                                 ON DELETE CASCADE,\r\n                                 FOREIGN KEY (ISBN) REFERENCES Livre(ISBN)\r\n                                 ON UPDATE CASCADE\r\n                                 ON DELETE CASCADE);\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/db/init.sql b/backend/db/init.sql
+--- a/backend/db/init.sql	(revision 97f0b4a1c6015a93698c1f501f4ebdac40587cb9)
++++ b/backend/db/init.sql	(date 1775523654159)
+@@ -1,4 +1,4 @@
+-USE online_library;
++USE only_library;
+ 
+ CREATE TABLE IF NOT EXISTS Utilisateur (UID char(200), nom varchar(200), date_naissance DATE, telephone varchar(20), adresse varchar(255)
+                                        , date_creation DATETIME DEFAULT CURRENT_TIMESTAMP, mot_de_passe varchar(255), email varchar(200),

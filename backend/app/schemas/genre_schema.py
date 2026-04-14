@@ -1,0 +1,5 @@
+from marshmallow import Schema, fields
+
+class GenreSchema(Schema):
+    id = fields.Int(dump_only=True, data_key="GID")
+    name = fields.Str(required=True, data_key="nom")

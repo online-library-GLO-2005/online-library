@@ -10,6 +10,7 @@ from app.utils.apiResponse import success_response
 from app.utils.guards import admin_required
 from app.errors import AppError
 
+from app.services import book_service
 
 # ─────────────────────────────────────────────
 # Paths
@@ -64,17 +65,28 @@ def serve_cover(filename):
 @admin_required
 def upload_book():
     file = request.files.get("file")
+    book_id = request.form.get("book_id")  # Récupéré du form-data
+
     url = _handle_upload(file, ALLOWED_BOOKS, BOOKS_DIR, "books")
-    return success_response(201, {"url": url})
+
+    if book_id:
+        book_service.update_book_media(int(book_id), content_url=url)
+
+    return success_response(201, {"url": url}, "Fichier PDF lié au livre" if book_id else "Fichier uploadé")
 
 
 @bp.post("/covers")
 @admin_required
 def upload_cover():
     file = request.files.get("file")
-    url = _handle_upload(file, ALLOWED_COVERS, COVERS_DIR, "covers")
-    return success_response(201, {"url": url})
+    book_id = request.form.get("book_id")
 
+    url = _handle_upload(file, ALLOWED_COVERS, COVERS_DIR, "covers")
+
+    if book_id:
+        book_service.update_book_media(int(book_id), cover_url=url)
+
+    return success_response(201, {"url": url}, "Couverture liée au livre" if book_id else "Couverture uploadée")
 
 # ─────────────────────────────────────────────
 # Helpers

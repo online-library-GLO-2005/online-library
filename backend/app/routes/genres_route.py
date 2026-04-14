@@ -2,43 +2,36 @@ from flask import Blueprint, request
 from app.services.genre_service import genre_service
 from app.utils.apiResponse import success_response
 from app.utils.guards import admin_required
+from app.schemas.genre_schema import GenreSchema
 
 bp = Blueprint("genres", __name__, url_prefix="/genres")
 
-
-# PLACEHOLDER - Don't forget to put queries params
 @bp.get("/")
 def get_all():
-    message = f"Endpoint get /{bp.name} called"
-    return success_response(201, None, message)
+    genres = genre_service.get_all_genres()
+    return success_response(200, GenreSchema(many=True).dump(genres), "Liste des genres récupérée")
 
+@bp.get("/<int:id>")
+def get_by_id(id):
+    genre = genre_service.get_genre_by_id(id)
+    return success_response(200, GenreSchema().dump(genre), "Genre trouvé")
 
-# PLACEHOLDER
-@bp.get("/:id")
-def get_by_id():
-    message = f"Endpoint get /{bp.name}/:id called"
-    return success_response(201, None, message)
-
-
-# PLACEHOLDER
 @bp.post("/")
 @admin_required
-def add_author():
-    message = f"Endpoint post /{bp.name} called"
-    return success_response(201, None, message)
+def add_genre():
+    data = GenreSchema().load(request.json)
+    new_genre = genre_service.create_genre(data['name'])
+    return success_response(201, GenreSchema().dump(new_genre), "Genre créé")
 
-
-# PLACEHOLDER
-@bp.put("/:id")
+@bp.put("/<int:id>")
 @admin_required
-def update_author():
-    message = f"Endpoint put /{bp.name}/:id called"
-    return success_response(201, None, message)
+def update_genre(id):
+    data = GenreSchema().load(request.json)
+    updated = genre_service.update_genre(id, data['name'])
+    return success_response(200, GenreSchema().dump(updated), "Genre mis à jour")
 
-
-# PLACEHOLDER
-@bp.delete("/:id")
+@bp.delete("/<int:id>")
 @admin_required
-def delete_author():
-    message = f"Endpoint delete /{bp.name}/:id called"
-    return success_response(201, None, message)
+def delete_genre(id):
+    genre_service.delete_genre(id)
+    return success_response(200, None, "Genre supprimé")

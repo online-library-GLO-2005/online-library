@@ -29,3 +29,5 @@ Faker==40.12.0
 
 # Production WSGI server (run app outside Flask dev server)
 gunicorn==22.0.0
+# For caching_sha2_password
+cryptography

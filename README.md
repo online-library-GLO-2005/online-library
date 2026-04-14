@@ -170,7 +170,7 @@ To inspect the database, connect via **MySQL Workbench** by dev composer:
 | User | `myuser` (app user) or `root` (admin) |
 | Password | `mypassword`(app user) or `secret`(admin) |
 
-> Password and User depends on the .env variables of backend. So if there are changes there this will change
+> Password and User depends on the .env variables of  So if there are changes there this will change
 ---
 
 ## 🔄 When to Rebuild

@@ -2,43 +2,36 @@ from flask import Blueprint, request
 from app.services.author_service import author_service
 from app.utils.apiResponse import success_response
 from app.utils.guards import admin_required
+from app.schemas.author_schema import AuthorSchema
 
 bp = Blueprint("authors", __name__, url_prefix="/authors")
 
-
-# PLACEHOLDER - Don't forget to put queries params
 @bp.get("/")
-def get_all():
-    message = f"Endpoint get /{bp.name} called"
-    return success_response(201, None, message)
+def get_authors():
+    authors = author_service.get_authors()
+    return success_response(200, authors, "Succès")
 
+@bp.get("/<int:id>")
+def get_by_id(id):
+    author = author_service.get_author_by_id(id)
+    return success_response(200, AuthorSchema().dump(author), "Auteur trouvé")
 
-# PLACEHOLDER
-@bp.get("/:id")
-def get_by_id():
-    message = f"Endpoint get /{bp.name}/:id called"
-    return success_response(201, None, message)
-
-
-# PLACEHOLDER
 @bp.post("/")
 @admin_required
 def add_author():
-    message = f"Endpoint post /{bp.name} called"
-    return success_response(201, None, message)
+    data = AuthorSchema().load(request.json)
+    new_author = author_service.create_author(data)
+    return success_response(201, AuthorSchema().dump(new_author), "Auteur ajouté")
 
-
-# PLACEHOLDER
-@bp.put("/:id")
+@bp.put("/<int:id>")
 @admin_required
-def update_author():
-    message = f"Endpoint put /{bp.name}/:id called"
-    return success_response(201, None, message)
+def update_author(id):
+    data = AuthorSchema().load(request.json, partial=True)
+    updated = author_service.update_author(id, data)
+    return success_response(200, AuthorSchema().dump(updated), "Auteur mis à jour")
 
-
-# PLACEHOLDER
-@bp.delete("/:id")
+@bp.delete("/<int:id>")
 @admin_required
-def delete_author():
-    message = f"Endpoint delete /{bp.name}/:id called"
-    return success_response(201, None, message)
+def delete_author(id):
+    author_service.delete_author(id)
+    return success_response(200, None, "Auteur supprimé")

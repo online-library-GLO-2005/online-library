@@ -2,43 +2,36 @@ from flask import Blueprint, request
 from app.services.publisher_service import publisher_service
 from app.utils.apiResponse import success_response
 from app.utils.guards import admin_required
+from app.schemas.publisher_schema import PublisherSchema
 
 bp = Blueprint("publishers", __name__, url_prefix="/publishers")
 
-
-# PLACEHOLDER - Don't forget to put queries params
 @bp.get("/")
 def get_all():
-    message = f"Endpoint get /{bp.name} called"
-    return success_response(201, None, message)
+    publishers = publisher_service.get_all_publishers()
+    return success_response(200, PublisherSchema(many=True).dump(publishers), "Éditeurs récupérés")
 
+@bp.get("/<int:id>")
+def get_by_id(id):
+    publisher = publisher_service.get_publisher_by_id(id)
+    return success_response(200, PublisherSchema().dump(publisher), "Éditeur trouvé")
 
-# PLACEHOLDER
-@bp.get("/:id")
-def get_by_id():
-    message = f"Endpoint get /{bp.name}/:id called"
-    return success_response(201, None, message)
-
-
-# PLACEHOLDER
 @bp.post("/")
 @admin_required
-def add_author():
-    message = f"Endpoint post /{bp.name} called"
-    return success_response(201, None, message)
+def add_publisher():
+    data = PublisherSchema().load(request.json)
+    new_pub = publisher_service.create_publisher(data)
+    return success_response(201, PublisherSchema().dump(new_pub), "Éditeur créé")
 
-
-# PLACEHOLDER
-@bp.put("/:id")
+@bp.put("/<int:id>")
 @admin_required
-def update_author():
-    message = f"Endpoint put /{bp.name}/:id called"
-    return success_response(201, None, message)
+def update_publisher(id):
+    data = PublisherSchema().load(request.json)
+    updated = publisher_service.update_publisher(id, data)
+    return success_response(200, PublisherSchema().dump(updated), "Éditeur mis à jour")
 
-
-# PLACEHOLDER
-@bp.delete("/:id")
+@bp.delete("/<int:id>")
 @admin_required
-def delete_author():
-    message = f"Endpoint delete /{bp.name}/:id called"
-    return success_response(201, None, message)
+def delete_publisher(id):
+    publisher_service.delete_publisher(id)
+    return success_response(200, None, "Éditeur supprimé")
