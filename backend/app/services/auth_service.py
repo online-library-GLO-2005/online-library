@@ -4,6 +4,18 @@ from app.utils.security import *
 from app.errors import AppError
 from datetime import datetime, timedelta
 
+from app.utils.security import generate_access_token
+
+from app.utils.security import generate_refresh_token
+
+from app.utils.security import get_jti
+
+from app.utils.security import hash_token
+
+from app.utils.security import hashPassword
+
+from app.utils.security import comparePassword
+
 
 class AuthService:
     def __init__(self):

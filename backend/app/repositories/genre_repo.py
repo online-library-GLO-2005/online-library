@@ -1,6 +1,9 @@
 from app.repositories.base_repo import BaseRepo
 from app.models.genre import Genre
 
+from app.models.book import Book
+
+
 class GenreRepo(BaseRepo):
     def get_all(self):
         query = f"SELECT * FROM {Genre.TABLE}"
@@ -29,4 +32,12 @@ class GenreRepo(BaseRepo):
         query = f"DELETE FROM {Genre.TABLE} WHERE {Genre.Columns.ID} = %s"
         self._db.execute(query, (gid,))
 
+    def get_books_by_genre(self, gid: int):
+        query = """
+            SELECT l.* FROM Livre l
+            JOIN Classer c ON l.LID = c.LID
+            WHERE c.GID = %s
+        """
+        rows = self._db.execute(query, (gid,))
+        return [Book.from_dict(row) for row in rows] if rows else []
 genre_repo = GenreRepo()

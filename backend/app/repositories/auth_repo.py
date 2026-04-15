@@ -63,14 +63,11 @@ class AuthRepo(BaseRepo):
         """
         self._db.execute(query, (uid, jti, token_hash, expires_at))
 
+
     def get_refresh_token_by_jti(self, jti: str):
-        query = f"""
-            SELECT *
-            FROM {Token.TABLE}
-            WHERE {Token.Columns.JTI} = %s
-        """
+        query = f"SELECT * FROM {Token.TABLE} WHERE {Token.Columns.JTI} = %s"
         rows = self._db.execute(query, (jti,))
-        return rows[0] if rows else None
+        return Token.from_dict(rows[0]) if rows else None
 
     def revoke_refresh_token(self, jti: str):
         query = f"""
@@ -89,7 +86,7 @@ class AuthRepo(BaseRepo):
               AND {Token.Columns.EXPIRES_AT} > NOW()
         """
         rows = self._db.execute(query, (jti,))
-        return rows[0]["UID"] if rows else None
+        return Token.from_dict(rows[0]) if rows else None
 
 
 auth_repo = AuthRepo()

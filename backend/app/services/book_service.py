@@ -74,5 +74,13 @@ class BookService:
 
         return self._repo.get_by_id(book_id)
 
+    def get_authors_by_book(self, lid: int):
+        return self._repo.get_authors_for_book(lid)
+
+    def get_genres_by_book(self, lid: int):
+        return self._repo.get_genres_for_book(lid)
+
+
+
 
 book_service = BookService()

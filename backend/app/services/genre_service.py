@@ -27,5 +27,9 @@ class GenreService:
         self.get_genre_by_id(gid)
         self._repo.delete(gid)
 
+    def get_books_by_genre(self, gid: int):
+        return self._repo.get_books_by_genre(gid)
+
+
 
 genre_service = GenreService()
