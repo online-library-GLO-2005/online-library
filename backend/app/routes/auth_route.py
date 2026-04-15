@@ -11,11 +11,19 @@ bp = Blueprint("auth", __name__, url_prefix="/auth")
 
 @bp.post("/login")
 def login():
-    data = LoginSchema().load(request.get_json())
+    try:
+        data = LoginSchema().load(request.get_json())
 
-    result = auth_service.login(email=data["email"], password=data["password"])
+        result = auth_service.login(email=data["email"], password=data["password"])
 
-    return success_response(200, AuthSchema().dump(result))
+        return success_response(200, AuthSchema().dump(result))
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error_type": type(e).__name__,
+            "message": str(e),
+        }), 500
+
 
 @bp.post("/signup")
 def signup():

@@ -8,9 +8,8 @@ class CommentRepo(BaseRepo):
         return Comment.from_dict(rows[0]) if rows else None
 
     def get_by_book(self, book_id: int):
-        rows = self._db.execute("SELECT * FROM Commentaire WHERE LID = 1")
+        rows = self._db.execute("SELECT * FROM Commentaire WHERE LID = %s", (book_id,))
         return [Comment.from_dict(r) for r in rows] if rows else []
-
     def create(self, user_id, book_id, message):
         query = f"""
             INSERT INTO {Comment.TABLE} 
