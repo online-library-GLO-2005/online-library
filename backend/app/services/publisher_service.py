@@ -1,4 +1,5 @@
 from app.repositories.publisher_repo import publisher_repo
+from app.repositories.book_repo import book_repo
 from app.errors import AppError
 
 
@@ -25,6 +26,9 @@ class PublisherService:
 
     def delete_publisher(self, eid: int):
         self.get_publisher_by_id(eid)
+        books = book_repo.find_by_publisher(publisher_id)
+        if books:
+            raise AppError(409, "Cannot delete publisher: books are still linked to it")
         self._repo.delete(eid)
 
 

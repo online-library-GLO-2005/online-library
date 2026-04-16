@@ -12,30 +12,22 @@ from app.errors import AppError
 
 from app.services import book_service
 
-# ─────────────────────────────────────────────
 # Paths
-# ─────────────────────────────────────────────
 # Go up two levels to get to backend/ from backend/app/routes/
 LOCAL_MEDIA_DIR = Path(__file__).resolve().parent.parent.parent / "media"
-MEDIA_DIR = Path(os.getenv("MEDIA_DIR", LOCAL_MEDIA_DIR / "media")).resolve()
+MEDIA_DIR = Path(
+    os.getenv("MEDIA_DIR_PATH", LOCAL_MEDIA_DIR)
+).resolve()  # filesystem path
+
+BASE_URL = os.getenv("MEDIA_BASE_URL", "http://localhost:5000")  # for building URLs
 
 BOOKS_DIR = MEDIA_DIR / "books"
 COVERS_DIR = MEDIA_DIR / "covers"
 
-BOOKS_DIR.mkdir(parents=True, exist_ok=True)
-COVERS_DIR.mkdir(parents=True, exist_ok=True)
-
 logging.basicConfig(level=logging.INFO)
 logging.info(f"Using MEDIA_DIR: {MEDIA_DIR}")
 
-print("MEDIA_DIR:", MEDIA_DIR)
-print("COVERS DIR:", MEDIA_DIR / "covers")
-print(list((MEDIA_DIR / "covers").glob("*")))
-print(list(BOOKS_DIR.glob("*")))
-
-# ─────────────────────────────────────────────
 # Config
-# ─────────────────────────────────────────────
 ALLOWED_BOOKS = {"pdf"}
 ALLOWED_COVERS = {"jpg", "jpeg", "png", "webp"}
 
@@ -43,9 +35,7 @@ ALLOWED_COVERS = {"jpg", "jpeg", "png", "webp"}
 bp = Blueprint("media", __name__, url_prefix="/media")
 
 
-# ─────────────────────────────────────────────
 # GET files
-# ─────────────────────────────────────────────
 @bp.get("/books/<filename>")
 def serve_book(filename):
     filename = secure_filename(filename)
@@ -58,9 +48,7 @@ def serve_cover(filename):
     return send_from_directory(COVERS_DIR, filename)
 
 
-# ─────────────────────────────────────────────
 # Upload
-# ─────────────────────────────────────────────
 @bp.post("/books")
 @admin_required
 def upload_book():
@@ -72,7 +60,9 @@ def upload_book():
     if book_id:
         book_service.update_book_media(int(book_id), content_url=url)
 
-    return success_response(201, {"url": url}, "Fichier PDF lié au livre" if book_id else "Fichier uploadé")
+    return success_response(
+        201, {"url": url}, "Fichier PDF lié au livre" if book_id else "Fichier uploadé"
+    )
 
 
 @bp.post("/covers")
@@ -86,11 +76,14 @@ def upload_cover():
     if book_id:
         book_service.update_book_media(int(book_id), cover_url=url)
 
-    return success_response(201, {"url": url}, "Couverture liée au livre" if book_id else "Couverture uploadée")
+    return success_response(
+        201,
+        {"url": url},
+        "Couverture liée au livre" if book_id else "Couverture uploadée",
+    )
 
-# ─────────────────────────────────────────────
+
 # Helpers
-# ─────────────────────────────────────────────
 def _handle_upload(file, allowed_extensions, folder: Path, subfolder: str):
     if not file or not file.filename:
         raise AppError(400, "Invalid file")
@@ -105,7 +98,7 @@ def _handle_upload(file, allowed_extensions, folder: Path, subfolder: str):
 
     file.save(file_path)
 
-    return f"/media/{subfolder}/{unique_name}"
+    return f"{BASE_URL}/media/{subfolder}/{unique_name}"
 
 
 def _allowed_file(filename: str, allowed_extensions: set):

@@ -18,7 +18,7 @@ export async function getBooksByGenre(id:number): Promise<Book[]> {
     return response.data.data;
 }
 
-export async function createGenre(data:Genre):Promise<ApiSuccess> {
+export async function createGenre(data: Omit<Genre, "id">):Promise<ApiSuccess> {
     const response = await api.post("/genres", data);
     return response.data;
 }

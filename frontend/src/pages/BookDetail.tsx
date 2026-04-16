@@ -61,8 +61,8 @@ function BookDetail() {
       isLoggedIn ? getFavorites() : Promise.resolve(null),
     ])
       .then(([bookRes, commentsRes, favRes]) => {
-        const bookData = bookRes.data ?? bookRes;
-        const commentsData = commentsRes.data ?? commentsRes;
+        const bookData = bookRes?.data ?? bookRes;
+        const commentsData = commentsRes?.data ?? commentsRes ?? [];
 
         setBook(bookData);
         setComments(commentsData);
@@ -76,6 +76,7 @@ function BookDetail() {
           setIsFavorite(favData.some((b: Book) => b.id === numId));
         }
 
+        if (!bookData) throw new Error('Book not found');
         return getPublishersById(bookData.eid);
       })
       .then((publisherData) => {

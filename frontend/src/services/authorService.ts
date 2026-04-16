@@ -18,7 +18,7 @@ export async function getBooksByAuthor(id:number): Promise<Book[]> {
     return response.data.data;
 }
 
-export async function createAuthor(data:Author): Promise<ApiSuccess> {
+export async function createAuthor(data:Omit<Author, "id">): Promise<ApiSuccess> {
     const response = await api.post("/authors", data);
     return response.data;
 }

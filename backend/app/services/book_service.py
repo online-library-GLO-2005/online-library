@@ -80,7 +80,9 @@ class BookService:
     def get_genres_by_book(self, lid: int):
         return self._repo.get_genres_for_book(lid)
 
-
+    def delete(self, lid: int):
+        self._repo.delete(lid)
+        return
 
 
 book_service = BookService()
