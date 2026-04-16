@@ -29,7 +29,7 @@ class DatabaseSeeder:
 
         # 2. Créer des Éditeurs
         editeur_ids = []
-        for _ in range(5):
+        for _ in range(20):
             editeur = publisher_repo.create(
                 name=self.faker.company(),
                 description=self.faker.catch_phrase()
@@ -38,7 +38,7 @@ class DatabaseSeeder:
 
         # 3. Créer des Auteurs
         author_ids = []
-        for _ in range(10):
+        for _ in range(50):
             author = author_repo.create({
                 'name': self.faker.name(),
                 'description': self.faker.text(max_nb_chars=200),
@@ -49,7 +49,7 @@ class DatabaseSeeder:
         # 4. Créer des Livres et faire les liaisons
         # Dans ton fichier auto_populate.py
         book_ids = []
-        for _ in range(20):
+        for _ in range(60):
             # Appel de la méthode avec le bon nom : create_book
             book = book_repo.create_book({
                 'eid': random.choice(editeur_ids),
@@ -75,7 +75,7 @@ class DatabaseSeeder:
         user_ids = []
         password_clair = 'password123'
         hashed_password = hashPassword(password_clair)
-        for _ in range(12):
+        for _ in range(20):
             # Attention : AuthRepo.register(name, email, hashed_password)
             # Pour le seeder, on peut mettre un mot de passe en clair ou simulé
             user = auth_repo.register(

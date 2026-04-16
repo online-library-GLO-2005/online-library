@@ -1,25 +1,23 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from dataclasses import dataclass
-from datetime import datetime
-
 @dataclass
 class Comment:
-    TABLE = "Commentaire"  # Correspond au nom dans ton CREATE TABLE
+    TABLE = "Commentaire"
 
     class Columns:
-        ID = "CID"                   # Clé primaire
-        UID = "UID"                  # Clé étrangère Utilisateur
-        LID = "LID"                  # Clé étrangère Livre
-        MESSAGE = "message"           # TEXT NOT NULL
-        DATE = "date_publication"     # DATETIME
+        ID = "CID"
+        UID = "UID"
+        LID = "LID"
+        MESSAGE = "message"
+        DATE = "date_publication"
 
     id: int
     uid: int
     lid: int
     message: str
     date_publication: datetime
+    user_name: str = None
 
     @classmethod
     def from_dict(cls, data: dict):
@@ -30,5 +28,6 @@ class Comment:
             uid=data.get(cls.Columns.UID),
             lid=data.get(cls.Columns.LID),
             message=data.get(cls.Columns.MESSAGE),
-            date_publication=data.get(cls.Columns.DATE)
+            date_publication=data.get(cls.Columns.DATE),
+            user_name=data.get('user_name')
         )
