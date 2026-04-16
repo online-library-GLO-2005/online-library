@@ -15,7 +15,7 @@ export async function getBookById(id: number): Promise<Book> {
 
 export async function getCommentsForBook(id: number): Promise<Comment[]> {
   const response = await api.get(`/books/${id}/comments`);
-  return response.data;
+  return response.data.data;
 }
 
 export async function linkAuthorToBook(
