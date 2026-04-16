@@ -21,7 +21,7 @@ export const router = createBrowserRouter([
       { index: true, element: <Catalog /> },
       { path: 'auth', element: <Auth /> },
       { path: 'book/:id', element: <BookDetail /> },
-      { path: 'media-reader/:filename', element: <BookReader /> },
+      { path: 'media-reader', element: <BookReader /> },
       { path: 'user/settings', element: <UserSettings /> },
       { path: 'user/booklist', element: <UserSavedBooks /> },
       { path: 'user/:id', element: <UserProfile /> },

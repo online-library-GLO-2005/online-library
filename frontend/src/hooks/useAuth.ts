@@ -5,6 +5,7 @@ import {
 } from '../services/authService';
 import { useAuthStore } from '../store/authStore';
 import type { LoginData, LoginResponse, SignupData } from '../types/auth';
+import type { User } from '../types/user';
 import { showError } from '../utils/getErrorMessage';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +19,7 @@ export const useAuth = () => {
     }
 
     setToken(data.token_access);
-    setUser(data.user.name, data.user.email, data.user.is_admin);
+    setUser(data.user as User);
     toast.success(`Welcome ${data.user.name}`);
     navigate('/');
   };
@@ -48,6 +49,7 @@ export const useAuth = () => {
   const logout = async () => {
     try {
       await logoutRequest();
+      toast.success(`Goodbye!`);
     } catch (error) {
       showError(error);
     }

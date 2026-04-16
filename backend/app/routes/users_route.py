@@ -18,13 +18,11 @@ bp = Blueprint("users", __name__, url_prefix="/users")
 @jwt_required()
 def get_me():
     user_id = get_jwt_identity()
-    result = user_service.get_user_profile(user_id)
-    data = {
-        **auth_service._to_user_dict(result["user"]),
-        "is_admin": result["is_admin"]
-    }
+    user, is_admin = user_service.get_user_profile(user_id)
+    data = {**auth_service._to_user_dict(user), "is_admin": is_admin}
 
     return success_response(200, UserSchema().dump(data), "Profil récupéré")
+
 
 @bp.get("/me/comments")
 @jwt_required()

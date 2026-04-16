@@ -17,7 +17,7 @@ class UserService(OwnableService):
         user = self._repo.get_by_id(uid)
         if not user:
             raise AppError(404, "Utilisateur introuvable")
-        return user, self._repo.is_admin(uid)  # return tuple, not dict
+        return (user, self._repo.is_admin(uid))  # return tuple, not dict
 
     def update_user(self, uid: int, data: dict):
         self._repo.update(uid, data)

@@ -1,21 +1,18 @@
-import { useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import type { Book } from '../types/book';
-import type { Comment } from '../types/comment';
-import {
-  getBookById,
-  getCommentsForBook,
-  postCommentToBook,
-} from '../services/bookService';
-import type { Publisher } from '../types/publisher';
-import { getPublishersById } from '../services/publisherService';
-import { useAuthStore } from '../store/authStore';
+import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import type {Book} from "../types/book";
+import type {Comment} from "../types/comment";
+import {getBookById, getCommentsForBook, postCommentToBook} from "../services/bookService";
+import type {Publisher} from "../types/publisher";
+import {getPublishersById} from "../services/publisherService";
+import {useAuthStore} from "../store/authStore";
 
 function BookDetail() {
   const { id } = useParams();
   const numId = Number(id);
 
-  const accessToken = useAuthStore((state) => state.accessToken);
+  const accessToken = useAuthStore(state => state.accessToken);
+  const navigate = useNavigate();
 
   const [book, setBook] = useState<Book | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -50,20 +47,26 @@ function BookDetail() {
       ) : (
         <div>
           <div className="flex flex-row">
-            <img src={book?.cover_url} alt={book?.title} />
-            <div className="flex flex-col">
-              <div className="flex flex-row">
-                <h2>{book?.title}</h2>
-                <div>★ {book?.rating ?? 'N/A'}</div>
-              </div>
-              <div>Description: {book?.description}</div>
-              <div>Genre(s): TBA</div>
-              <div>Author(s): TBA</div>
-              <div>Publisher: {publisher?.name}</div>
-              <div>Publication Date: {book?.pub_date}</div>
-              <div>ISBN: {book?.isbn}</div>
-              {accessToken && <button>Read {book?.title}</button>}
-            </div>
+              <img src={book?.cover_url} alt={book?.title} />
+                <div className="flex flex-col">
+                  <div className="flex flex-row">
+                    <h2>{book?.title}</h2>
+                    <div>★ {book?.rating ?? "N/A"}</div>
+                  </div>
+                  <div>Description: {book?.description}</div>
+                  <div>Genre(s):</div>
+                    {book?.genres.map(genre => (
+                        <span key={genre.id}>{genre.name}</span>
+                    ))}
+                  <div>Author(s):</div>
+                    {book?.authors.map(author => (
+                        <span key={author.id}>{author.name}</span>
+                    ))}
+                  <div>Publisher: {publisher?.name}</div>
+                  <div>Publication Date: {book?.pub_date}</div>
+                  <div>ISBN: {book?.isbn}</div>
+                  {accessToken && <button onClick={() => navigate("/media-reader", {state: {url: book?.content_url}})}>Read {book?.title}</button>}
+                </div>
           </div>
           <div>
             {accessToken && (

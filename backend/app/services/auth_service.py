@@ -79,17 +79,17 @@ class AuthService:
         if not token:
             raise AppError(401, "Invalid refresh token")
 
-        if token["revoked"]:
+        if token.revoked:
             raise AppError(401, "Token revoked")
 
-        if token["expires_at"] < datetime.utcnow():
+        if token.expires_at < datetime.utcnow():
             raise AppError(401, "Token expired")
 
         # extra security
-        if token["token_hash"] != hash_token(refresh_token):
+        if token.token_hash != hash_token(refresh_token):
             raise AppError(401, "Invalid token")
 
-        access_token = generate_access_token(str(token["UID"]), is_admin)
+        access_token = generate_access_token(str(token.uid), is_admin)
 
         return {"access_token": access_token}
 

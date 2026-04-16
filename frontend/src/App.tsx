@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { initAuth } from './services/authService';
+import { initAuth } from './services/initService';
 import { Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Navbar from './components/Navbar';
