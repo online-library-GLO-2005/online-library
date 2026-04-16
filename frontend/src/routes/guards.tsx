@@ -6,6 +6,18 @@ type Props = {
   children: ReactNode;
 };
 
+export function RequireAdmin({ children }: { children: React.ReactNode }) {
+  const token = useAuthStore((s) => s.accessToken);
+  const isAdmin = useAuthStore((s) => s.is_admin);
+  const location = useLocation();
+
+  if (!token || !isAdmin) {
+    return <Navigate to="/" replace state={{ from: location }} />;
+  }
+
+  return <>{children}</>;
+}
+
 export function RequireAuth({ children }: Props) {
   const token = useAuthStore((s) => s.accessToken);
   const location = useLocation();

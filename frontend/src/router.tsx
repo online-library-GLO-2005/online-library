@@ -14,7 +14,7 @@ import PublisherDetail from './pages/PublisherDetail';
 import Admin from './pages/Admin';
 import NotFound from './pages/NotFound';
 
-import { RequireAuth, RequireGuest } from './routes/guards';
+import { RequireAdmin, RequireAuth, RequireGuest } from './routes/guards';
 
 export const router = createBrowserRouter([
   {
@@ -70,9 +70,9 @@ export const router = createBrowserRouter([
       {
         path: 'admin',
         element: (
-          <RequireAuth>
+          <RequireAdmin>
             <Admin />
-          </RequireAuth>
+          </RequireAdmin>
         ),
       },
 

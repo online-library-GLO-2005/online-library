@@ -8,8 +8,10 @@ interface AuthState {
   email: string | null;
   is_admin: boolean;
   id: number | null;
-
+  authReady: boolean;
   favorites: Book[];
+
+  setAuthReady: (v: boolean) => void;
 
   setToken: (token: string) => void;
   setUser: (user: User) => void;
@@ -27,9 +29,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   is_admin: false,
   email: null,
   id: null,
+  authReady: false,
 
   favorites: [],
 
+  setAuthReady: (v: boolean) => set({ authReady: v }),
   setToken: (token: string) => set({ accessToken: token }),
 
   setUser: (user: User) =>

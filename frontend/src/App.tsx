@@ -1,17 +1,32 @@
 import { useEffect } from 'react';
-import { initAuth } from './services/initService';
 import { Outlet } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+
 import Navbar from './components/Navbar';
+import { useAuthStore } from './store/authStore';
+import { initAuth } from './services/initService';
 
 function App() {
+  const setAuthReady = useAuthStore((s) => s.setAuthReady);
+  const authReady = useAuthStore((s) => s.authReady);
+
   useEffect(() => {
-    initAuth();
-  }, []);
+    const run = async () => {
+      try {
+        await initAuth();
+      } finally {
+        setAuthReady(true);
+      }
+    };
+
+    run();
+  }, [setAuthReady]);
+
+  if (!authReady) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
-      <Toaster position="top-right" />
       <Navbar />
       <Outlet />
     </>
