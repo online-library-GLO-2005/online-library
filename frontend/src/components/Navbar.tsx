@@ -3,7 +3,7 @@ import { useAuthStore } from '../store/authStore';
 import { useAuth } from '../hooks/useAuth';
 
 function Navbar() {
-  const { name, email, accessToken } = useAuthStore();
+  const { name, email, accessToken, id: userId } = useAuthStore();
   const { logout } = useAuth();
 
   const isLoggedIn = !!accessToken;
@@ -61,7 +61,9 @@ function Navbar() {
       <div className="flex items-center gap-4 text-white">
         {isLoggedIn && (
           <>
-            <span className="text-sm">{name ? `Hi, ${name}` : email}</span>
+            <Link className="text-sm" to={`user/${userId}`}>
+              {name ? `Hi, ${name}` : email}
+            </Link>
 
             <button
               onClick={logout}

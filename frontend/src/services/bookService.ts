@@ -13,19 +13,25 @@ export async function getBookById(id: number): Promise<Book> {
   return response.data.data;
 }
 
-export async function getCommentsForBook(id:number): Promise<Comment[]> {
-    const response = await api.get(`/books/${id}/comments`);
-    return response.data;
+export async function getCommentsForBook(id: number): Promise<Comment[]> {
+  const response = await api.get(`/books/${id}/comments`);
+  return response.data;
 }
 
-export async function linkAuthorToBook(id:number, aid:number): Promise<ApiSuccess> {
-    const response = await api.post(`/books/${id}/authors/${aid}`);
-    return response.data;
+export async function linkAuthorToBook(
+  id: number,
+  aid: number,
+): Promise<ApiSuccess> {
+  const response = await api.post(`/books/${id}/authors/${aid}`);
+  return response.data;
 }
 
-export async function linkGenreToBook(id:number, gid:number): Promise<ApiSuccess> {
-    const response = await api.post(`/books/${id}/genres/${gid}`);
-    return response.data;
+export async function linkGenreToBook(
+  id: number,
+  gid: number,
+): Promise<ApiSuccess> {
+  const response = await api.post(`/books/${id}/genres/${gid}`);
+  return response.data;
 }
 
 export async function postCommentToBook(

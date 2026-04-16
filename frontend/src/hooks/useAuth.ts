@@ -49,6 +49,7 @@ export const useAuth = () => {
   const logout = async () => {
     try {
       await logoutRequest();
+      toast.success(`Goodbye!`);
     } catch (error) {
       showError(error);
     }
