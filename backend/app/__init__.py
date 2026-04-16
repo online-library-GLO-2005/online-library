@@ -1,4 +1,6 @@
-from flask import Flask
+import os
+
+from flask import Flask, send_from_directory
 from app.config import Config
 from app.middleware.error_handlers import register_error_handlers
 from app.middleware.logging import configure_logging
@@ -35,6 +37,13 @@ def create_app() -> Flask:
 
     # Middleware config, only filters the /health log
     configure_logging()
+
+    # Route pour servir les PDF
+    @app.route('/media/books/<filename>')
+    def serve_book(filename):
+        # On définit le chemin vers le dossier media
+        media_path = os.path.join(app.root_path, '..', 'media', 'books')
+        return send_from_directory(media_path, filename)
 
     # == Initialize extensions
 
