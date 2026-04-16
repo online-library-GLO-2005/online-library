@@ -45,29 +45,30 @@ function Navbar() {
             </Link>
           </li>
         )}
-
-        {!isLoggedIn && (
-          <li>
-            <Link
-              className="text-white font-semibold hover:underline"
-              to="/auth"
-            >
-              Login
-            </Link>
-          </li>
-        )}
       </ul>
 
-      <div className="flex items-center gap-4 text-white">
+      <div className="flex items-center gap-4 text-white ml-auto">
+        {!isLoggedIn && (
+          <Link
+            to="/auth"
+            className="bg-blue-500 px-3 py-1 rounded hover:bg-blue-600 transition"
+          >
+            Login
+          </Link>
+        )}
+
         {isLoggedIn && (
           <>
-            <Link className="text-sm" to={`user/${userId}`}>
+            <Link
+              to={`/user/${userId}`}
+              className="px-3 py-1 rounded hover:bg-white/10 transition font-medium"
+            >
               {name ? `Hi, ${name}` : email}
             </Link>
 
             <button
               onClick={logout}
-              className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+              className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 transition"
             >
               Logout
             </button>
