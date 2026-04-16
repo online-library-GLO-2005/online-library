@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import App from './App';
+
 import Catalog from './pages/Catalog';
 import Auth from './pages/Auth';
 import BookDetail from './pages/BookDetail';
@@ -11,6 +12,9 @@ import AuthorDetail from './pages/AuthorDetail';
 import PublisherCatalog from './pages/PublisherCatalog';
 import PublisherDetail from './pages/PublisherDetail';
 import Admin from './pages/Admin';
+import NotFound from './pages/NotFound';
+
+import { RequireAuth, RequireGuest } from './routes/guards';
 
 export const router = createBrowserRouter([
   {
@@ -18,16 +22,62 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Catalog /> },
-      { path: 'auth', element: <Auth /> },
+
+      // guest only
+      {
+        path: 'auth',
+        element: (
+          <RequireGuest>
+            <Auth />
+          </RequireGuest>
+        ),
+      },
+
       { path: 'book/:id', element: <BookDetail /> },
       { path: 'media-reader', element: <BookReader /> },
-      { path: 'user/settings', element: <UserSettings /> },
-      { path: 'user/:id', element: <UserProfile /> },
+
+      // auth only
+      {
+        path: 'user/settings',
+        element: (
+          <RequireAuth>
+            <UserSettings />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: 'user/me',
+        element: (
+          <RequireAuth>
+            <UserProfile />
+          </RequireAuth>
+        ),
+      },
+      {
+        path: 'user/me',
+        element: (
+          <RequireAuth>
+            <UserProfile />
+          </RequireAuth>
+        ),
+      },
+
       { path: 'author', element: <AuthorCatalog /> },
       { path: 'author/:id', element: <AuthorDetail /> },
       { path: 'publisher', element: <PublisherCatalog /> },
       { path: 'publisher/:id', element: <PublisherDetail /> },
-      { path: 'admin', element: <Admin /> },
+
+      {
+        path: 'admin',
+        element: (
+          <RequireAuth>
+            <Admin />
+          </RequireAuth>
+        ),
+      },
+
+      // fallback
+      { path: '*', element: <NotFound /> },
     ],
   },
 ]);
