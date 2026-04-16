@@ -4,7 +4,7 @@ import { useAuthStore } from '../store/authStore';
 import { useAuth } from '../hooks/useAuth';
 
 function Navbar() {
-  const { name, email, accessToken } = useAuthStore();
+  const { name, email, accessToken, is_admin } = useAuthStore(); // add is_admin if you store it
   const { logout } = useAuth();
   const location = useLocation();
 
@@ -23,11 +23,9 @@ function Navbar() {
         <Link to="/" className={linkClass('/')}>
           Catalog
         </Link>
-
         <Link to="/author" className={linkClass('/author')}>
           Authors
         </Link>
-
         <Link to="/publisher" className={linkClass('/publisher')}>
           Publishers
         </Link>
@@ -53,12 +51,22 @@ function Navbar() {
             {open && (
               <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded-md shadow-md overflow-hidden">
                 <Link
-                  to={`/user/me`}
+                  to="/user/me"
                   onClick={() => setOpen(false)}
                   className="block px-4 py-2 hover:bg-gray-100"
                 >
                   Profile
                 </Link>
+
+                {is_admin && (
+                  <Link
+                    to="/admin"
+                    onClick={() => setOpen(false)}
+                    className="block px-4 py-2 hover:bg-gray-100"
+                  >
+                    Admin
+                  </Link>
+                )}
 
                 <button
                   onClick={() => {
