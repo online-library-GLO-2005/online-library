@@ -4,7 +4,7 @@ import { useAuthStore } from '../store/authStore';
 import { useAuth } from '../hooks/useAuth';
 
 function Navbar() {
-  const { name, email, accessToken, id: userId } = useAuthStore();
+  const { name, email, accessToken } = useAuthStore();
   const { logout } = useAuth();
   const location = useLocation();
 
@@ -53,7 +53,7 @@ function Navbar() {
             {open && (
               <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded-md shadow-md overflow-hidden">
                 <Link
-                  to={`/user/${userId}`}
+                  to={`/user/me`}
                   onClick={() => setOpen(false)}
                   className="block px-4 py-2 hover:bg-gray-100"
                 >
