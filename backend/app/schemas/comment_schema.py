@@ -1,5 +1,6 @@
 from marshmallow import Schema, fields
 
+
 class CommentSchema(Schema):
     id = fields.Int()
     uid = fields.Int()

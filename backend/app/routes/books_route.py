@@ -63,15 +63,20 @@ def get_book_comments(lid):
     schema = CommentSchema(many=True)
     return jsonify(schema.dump(comments)), 200
 
+
 @bp.get("/<int:lid>/authors")
 def get_book_authors(lid):
     # On récupère les auteurs via le service
     authors = book_service.get_authors_by_book(lid)
-    return success_response(200, AuthorSchema(many=True).dump(authors), "Auteurs du livre récupérés")
+    return success_response(
+        200, AuthorSchema(many=True).dump(authors), "Auteurs du livre récupérés"
+    )
+
 
 @bp.get("/<int:lid>/genres")
 def get_book_genres(lid):
     # On récupère les genres via le service
     genres = book_service.get_genres_by_book(lid)
-    return success_response(200, GenreSchema(many=True).dump(genres), "Genres du livre récupérés")
-
+    return success_response(
+        200, GenreSchema(many=True).dump(genres), "Genres du livre récupérés"
+    )

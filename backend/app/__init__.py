@@ -31,6 +31,7 @@ def register_blueprints(app: Flask) -> None:
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.url_map.strict_slashes = False
 
     # Middleware config, only filters the /health log
     configure_logging()
