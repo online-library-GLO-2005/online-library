@@ -1,5 +1,12 @@
+import {useLocation} from "react-router-dom";
+
 function BookReader() {
-  return <div>Book Reader Page</div>;
+  const {state} = useLocation();
+  const pdfUrl = state?.url;
+
+  return (
+      <iframe src={pdfUrl} className="w-full h-screen"/>
+  );
 }
 
 export default BookReader;

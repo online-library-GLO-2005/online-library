@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type {Book} from "../types/book";
 import type {Comment} from "../types/comment";
@@ -12,6 +12,7 @@ function BookDetail() {
   const numId = Number(id);
 
   const accessToken = useAuthStore(state => state.accessToken);
+  const navigate = useNavigate();
 
   const [book, setBook] = useState<Book | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -54,12 +55,18 @@ function BookDetail() {
                     <div>★ {book?.rating ?? "N/A"}</div>
                   </div>
                   <div>Description: {book?.description}</div>
-                  <div>Genre(s): TBA</div>
-                  <div>Author(s): TBA</div>
+                  <div>Genre(s):</div>
+                    {book?.genres.map(genre => (
+                        <span key={genre.id}>{genre.name}</span>
+                    ))}
+                  <div>Author(s):</div>
+                    {book?.authors.map(author => (
+                        <span key={author.id}>{author.name}</span>
+                    ))}
                   <div>Publisher: {publisher?.name}</div>
                   <div>Publication Date: {book?.pub_date}</div>
                   <div>ISBN: {book?.isbn}</div>
-                  {accessToken && <button>Read {book?.title}</button>}
+                  {accessToken && <button onClick={navigate("/media-reader", {state: {url: book?.content_url}})}>Read {book?.title}</button>}
                 </div>
               </div>
               <div>

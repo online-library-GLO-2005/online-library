@@ -1,6 +1,7 @@
 import api from "./api";
 import type {Author} from "../types/author";
 import type {ApiSuccess} from "../types/api";
+import type { Book } from "../types/book";
 
 export async function getAuthors(): Promise<Author[]> {
     const response = await api.get("/authors");
@@ -9,6 +10,11 @@ export async function getAuthors(): Promise<Author[]> {
 
 export async function getAuthorsById(id:number): Promise<Author> {
     const response = await api.get(`/authors/${id}`);
+    return response.data.data;
+}
+
+export async function getBooksByAuthor(id:number): Promise<Book[]> {
+    const response = await api.get(`/authors/${id}/books`);
     return response.data.data;
 }
 

@@ -35,6 +35,8 @@ function Catalog() {
                       <img src={book.cover_url} alt={book.title} className="w-full h-64 object-cover rounded-t-lg"/>
                       <div className="p-3 flex flex-col gap-1">
                         <div className="font-semibold text-sm line-clamp-2">{book.title}</div>
+                          {book?.authors.map(author => (<span key={author.id}>{author.name}</span>))}
+                          {book?.genres.map(genre => (<span key={genre.id}>{genre.name}</span>))}
                         <div className="text-yellow-500 text-sm">★ {book.rating ?? "N/A"}</div>
                       </div>
                     </div>
