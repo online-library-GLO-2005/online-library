@@ -6,7 +6,8 @@ from app.utils.guards import admin_required
 
 from app.schemas import comment_schema
 from app.services.comment_service import comment_service
-
+from app.schemas.author_schema import AuthorSchema
+from app.schemas.genre_schema import GenreSchema
 from app.schemas.comment_schema import CommentSchema
 
 bp = Blueprint("books", __name__, url_prefix="/books")
@@ -61,3 +62,16 @@ def get_book_comments(lid):
     comments = comment_service.get_comments_by_book(lid)
     schema = CommentSchema(many=True)
     return jsonify(schema.dump(comments)), 200
+
+@bp.get("/<int:lid>/authors")
+def get_book_authors(lid):
+    # On récupère les auteurs via le service
+    authors = book_service.get_authors_by_book(lid)
+    return success_response(200, AuthorSchema(many=True).dump(authors), "Auteurs du livre récupérés")
+
+@bp.get("/<int:lid>/genres")
+def get_book_genres(lid):
+    # On récupère les genres via le service
+    genres = book_service.get_genres_by_book(lid)
+    return success_response(200, GenreSchema(many=True).dump(genres), "Genres du livre récupérés")
+

@@ -7,6 +7,8 @@ from app.schemas.comment_schema import CommentSchema
 from app.utils.apiResponse import success_response
 from app.utils.guards import admin_required
 
+from app.services.auth_service import auth_service
+
 bp = Blueprint("users", __name__, url_prefix="/users")
 
 # --- PROFIL PERSO ---
@@ -15,10 +17,14 @@ bp = Blueprint("users", __name__, url_prefix="/users")
 @bp.get("/me")
 @jwt_required()
 def get_me():
-    user, is_admin = user_service.get_user_profile(get_jwt_identity())
-    dumped = UserSchema().dump(user)
-    return success_response(200, {**dumped, "is_admin": is_admin}, "Profil récupéré")
+    user_id = get_jwt_identity()
+    result = user_service.get_user_profile(user_id)
+    data = {
+        **auth_service._to_user_dict(result["user"]),
+        "is_admin": result["is_admin"]
+    }
 
+    return success_response(200, UserSchema().dump(data), "Profil récupéré")
 
 @bp.get("/me/comments")
 @jwt_required()

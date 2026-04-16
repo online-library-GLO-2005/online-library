@@ -1,6 +1,9 @@
 from app.repositories.base_repo import BaseRepo
 from app.models.author import Author
 
+from app.models.book import Book
+
+
 class AuthorRepo(BaseRepo):
     def get_all(self, search_name=None):
         query = f"SELECT * FROM {Author.TABLE}"
@@ -48,5 +51,15 @@ class AuthorRepo(BaseRepo):
     def delete(self, aid: int):
         query = f"DELETE FROM {Author.TABLE} WHERE {Author.Columns.ID} = %s"
         self._db.execute(query, (aid,))
+
+    def get_books_by_author(self, aid: int):
+        query = """
+            SELECT l.* FROM Livre l
+            JOIN Ecrit e ON l.LID = e.LID
+            WHERE e.AID = %s
+        """
+        rows = self._db.execute(query, (aid,))
+        # Transformation en objets Book pour que le Schema les reconnaisse
+        return [Book.from_dict(row) for row in rows] if rows else []
 
 author_repo = AuthorRepo()

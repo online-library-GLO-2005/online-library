@@ -4,6 +4,9 @@ from app.utils.apiResponse import success_response
 from app.utils.guards import admin_required
 from app.schemas.author_schema import AuthorSchema
 
+from app.utils.apiResponse import error_response
+from app.schemas.book_schema import BookSchema
+
 bp = Blueprint("authors", __name__, url_prefix="/authors")
 
 @bp.get("/")
@@ -35,3 +38,15 @@ def update_author(id):
 def delete_author(id):
     author_service.delete_author(id)
     return success_response(200, None, "Auteur supprimé")
+
+
+@bp.get("/<int:aid>/books")
+def get_author_books(aid):
+    try:
+        author = author_service.get_author_by_id(aid)
+        if not author:
+            return error_response(404, "Auteur introuvable")
+        books = author_service.get_books_by_author(aid)
+        return success_response(200, BookSchema(many=True).dump(books), "Livres de l'auteur récupérés")
+    except Exception as e:
+        return error_response(500, str(e))

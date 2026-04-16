@@ -27,5 +27,8 @@ class AuthorService:
         self.get_author_by_id(aid)
         self._repo.delete(aid)
 
+    def get_books_by_author(self, aid: int):
+        return self._repo.get_books_by_author(aid)
+
 
 author_service = AuthorService()

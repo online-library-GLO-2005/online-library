@@ -1,4 +1,4 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from app.services.auth_service import auth_service
 from flask_jwt_extended import jwt_required
 from app.utils.apiResponse import success_response
@@ -16,7 +16,6 @@ def login():
     result = auth_service.login(email=data["email"], password=data["password"])
 
     return success_response(200, AuthSchema().dump(result))
-
 
 @bp.post("/signup")
 def signup():

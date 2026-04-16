@@ -4,6 +4,9 @@ from app.utils.apiResponse import success_response
 from app.utils.guards import admin_required
 from app.schemas.genre_schema import GenreSchema
 
+from app.utils.apiResponse import error_response
+from app.schemas.book_schema import BookSchema
+
 bp = Blueprint("genres", __name__, url_prefix="/genres")
 
 @bp.get("/")
@@ -35,3 +38,13 @@ def update_genre(id):
 def delete_genre(id):
     genre_service.delete_genre(id)
     return success_response(200, None, "Genre supprimé")
+
+
+@bp.get("/<int:gid>/books")
+def get_genre_books(gid):
+
+    genre = genre_service.get_genre_by_id(gid)
+    if not genre:
+        return error_response(404, "Genre introuvable")
+    books = genre_service.get_books_by_genre(gid)
+    return success_response(200, BookSchema(many=True).dump(books), "Livres du genre récupérés")

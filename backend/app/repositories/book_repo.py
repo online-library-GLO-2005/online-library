@@ -1,6 +1,10 @@
 from app.repositories.base_repo import BaseRepo
 from app.models.book import Book
 
+from app.models.author import Author
+
+from app.models.genre import Genre
+
 
 class BookRepo(BaseRepo):
     def get_all_books(self):
@@ -48,12 +52,12 @@ class BookRepo(BaseRepo):
         self._db.execute(query, tuple(params))
 
     def link_author(self, lid: int, aid: int):
-        query = "INSERT INTO Ecrit (AID, LID) VALUES (%s, %s)"
-        self._db.execute(query, (aid, lid))
+        query = "INSERT INTO Ecrit (LID, AID) VALUES (%s, %s)"
+        return self._db.execute(query, (lid, aid))
 
     def link_genre(self, lid: int, gid: int):
-        query = "INSERT INTO Classer (GID, LID) VALUES (%s, %s)"
-        self._db.execute(query, (gid, lid))
+        query = "INSERT INTO Classer (LID, GID) VALUES (%s, %s)"
+        return self._db.execute(query, (lid, gid))
 
     def get_authors_by_book(self, lid: int):
         query = """
@@ -70,5 +74,25 @@ class BookRepo(BaseRepo):
             WHERE c.LID = %s
         """
         return self._db.execute(query, (lid,))
+
+    def get_authors_for_book(self, lid: int):
+        # La table de liaison est "Ecrit" (AID, LID)
+        query = """
+            SELECT a.* FROM Auteur a
+            JOIN Ecrit e ON a.AID = e.AID
+            WHERE e.LID = %s
+        """
+        rows = self._db.execute(query, (lid,))
+        return [Author.from_dict(row) for row in rows]
+
+    def get_genres_for_book(self, lid: int):
+        # La table de liaison est "Classer" (GID, LID)
+        query = """
+            SELECT g.* FROM Genre g
+            JOIN Classer c ON g.GID = c.GID
+            WHERE c.LID = %s
+        """
+        rows = self._db.execute(query, (lid,))
+        return [Genre.from_dict(row) for row in rows]
 
 book_repo = BookRepo()

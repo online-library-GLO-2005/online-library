@@ -71,17 +71,27 @@ class Database:
     # params replaces %s placeholders in queries: "SELECT * FROM books WHERE id = %s", (1,)
     # returns first result as dict or None if not found: {"id": 1, "title": "Dune"}
     def execute(
-        self, query: str, params: tuple[str, ...] = (), conn: Connection | None = None
-    ) -> list[dict[str, Any]]:
-        if conn is not None:
-            with conn.cursor() as cursor:
-                cursor.execute(query, params)
-                return cast(list[dict[str, Any]], cursor.fetchall())
-        with self._get_conn() as conn:
-            with conn.cursor() as cursor:
-                cursor.execute(query, params)
-                return cast(list[dict[str, Any]], cursor.fetchall())
+            self,
+            query: str,
+            params: tuple[Any, ...] = (),
+            conn: Connection | None = None,
+            return_id: bool = False
+    ) -> Any:
+        if conn is None:
+            with self._get_conn() as new_conn:
+                return self._execute_internal(query, params, new_conn, return_id)
+        return self._execute_internal(query, params, conn, return_id)
 
+    def _execute_internal(
+            self, query: str, params: tuple[Any, ...], conn: Connection, return_id: bool
+    ) -> Any:
+        with conn.cursor() as cursor:
+            cursor.execute(query, params)
+
+            if return_id:
+                return cursor.lastrowid
+
+            return cast(list[dict[str, Any]], cursor.fetchall())
     # params replaces %s placeholders in queries: "SELECT * FROM books WHERE id = %s", (1,)
     # returns first result as dict or None if not found: {"id": 1, "title": "Dune"}
     def execute_one(
