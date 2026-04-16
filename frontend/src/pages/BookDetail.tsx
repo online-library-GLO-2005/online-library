@@ -6,6 +6,7 @@ import {
   getBookById,
   getCommentsForBook,
   postCommentToBook,
+  rateBook
 } from '../services/bookService';
 import type { Publisher } from '../types/publisher';
 import { getPublishersById } from '../services/publisherService';
@@ -22,6 +23,7 @@ function BookDetail() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [publisher, setPublisher] = useState<Publisher | null>(null);
   const [input, setInput] = useState<string>('');
+  const [hovered, setHovered] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -123,6 +125,21 @@ function BookDetail() {
           </div>
           {accessToken && (
             <div className="bg-white rounded-xl shadow p-4 flex gap-2">
+              <div className="flex flex-row">
+                {[1, 2, 3, 4, 5].map(star => (
+                    <span
+                        key={star}
+                        className={`text-sxl cursor-pointer ${star <= hovered? "text-yellow-400" : "text-gray-300"}`}
+                        onMouseEnter={() => setHovered(star)}
+                        onMouseLeave={() => setHovered(0)}
+                        onClick={() => {
+                          rateBook(numId, star);
+                        }}
+                    >
+                      ★
+                    </span>
+                ))}
+              </div>
               <input
                 type="text"
                 value={input}

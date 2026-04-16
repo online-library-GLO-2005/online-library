@@ -44,6 +44,11 @@ export async function postCommentToBook(
   return response.data;
 }
 
+export async function rateBook(id:number, note:number): Promise<ApiSuccess> {
+  const response = await api.post(`/books/${id}/ratings`, {note: note});
+  return response.data;
+}
+
 export async function postBook(data: Book): Promise<ApiSuccess> {
   const response = await api.post(`/books`, data);
   return response.data;
