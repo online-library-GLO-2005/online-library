@@ -21,23 +21,32 @@ function PublisherCatalog() {
   }, []);
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Publisher Catalog</h1>
-      {isLoading ? (
-        <div className="text-center text-gray-500 mt-20">Loading...</div>
-      ) : error ? (
-        <div className="text-center text-red-500 mt-20">{error}</div>
-      ) : (
-        <div className="flex flex-col">
-          {publishers.map((publisher) => (
-            <Link to={`/publisher/${publisher.id}`} key={publisher.id}>
-              <div className="flex flex-row rounded-lg shadow hover:shadow-lg transition cursor-pointer items-center gap-4 p-3">
-                <div className="font-semibold">{publisher.name}</div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+    <div className="min-h-screen bg-gray-100 text-black p-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-8">Publisher Catalog</h1>
+
+        {isLoading ? (
+          <div className="text-center text-gray-500 mt-20">Loading...</div>
+        ) : error ? (
+          <div className="text-center text-red-500 mt-20">{error}</div>
+        ) : (
+          <div className="space-y-3">
+            {publishers.map((publisher) => (
+              <Link
+                to={`/publisher/${publisher.id}`}
+                key={publisher.id}
+                className="block"
+              >
+                <div className="flex items-center justify-between p-4 bg-white rounded-xl shadow-sm hover:shadow-md hover:scale-[1.01] transition">
+                  <div className="font-semibold text-lg">{publisher.name}</div>
+
+                  <div className="text-sm text-gray-500">View details →</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

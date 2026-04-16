@@ -49,69 +49,82 @@ function UserProfile() {
   if (!user) return <div className="text-red-500 p-4">User not found</div>;
 
   return (
-    <div className="min-h-screen bg-white text-black p-6 space-y-6">
-      {/* USER */}
-      <div className="bg-white/10 p-4 rounded">
-        <h1 className="text-xl font-semibold">{user.name || user.email}</h1>
-        <p className="text-sm opacity-70">{user.email}</p>
+    <div className="min-h-screen bg-gray-100 text-black p-6">
+      <div className="max-w-5xl mx-auto space-y-8">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-2xl p-6 shadow-md">
+          <h1 className="text-2xl font-bold">{user.name || user.email}</h1>
+          <p className="text-sm opacity-80">{user.email}</p>
 
-        {user.is_admin && (
-          <span className="text-xs bg-yellow-500 text-black px-2 py-1 rounded inline-block mt-2">
-            Admin
-          </span>
-        )}
+          {user.is_admin && (
+            <span className="inline-block mt-3 text-xs bg-yellow-300 text-black px-2 py-1 rounded">
+              Admin
+            </span>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <section className="bg-white rounded-xl shadow p-5 border-l-4 border-pink-500">
+            <h2 className="text-lg font-semibold mb-3">Favorites</h2>
+
+            {(favorites?.length ?? 0) === 0 ? (
+              <p className="text-gray-500">No favorites yet</p>
+            ) : (
+              <div className="space-y-2">
+                {favorites.map((b) => (
+                  <div
+                    key={b.id}
+                    className="p-2 rounded hover:bg-pink-50 transition"
+                  >
+                    {b.title}
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+
+          <section className="bg-white rounded-xl shadow p-5 border-l-4 border-green-500">
+            <h2 className="text-lg font-semibold mb-3">History</h2>
+
+            {(books?.length ?? 0) === 0 ? (
+              <p className="text-gray-500">No history yet</p>
+            ) : (
+              <div className="space-y-2">
+                {books.map((b) => (
+                  <div
+                    key={b.id}
+                    className="p-2 rounded hover:bg-green-50 transition"
+                  >
+                    {b.title}
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
+
+        <section className="bg-white rounded-xl shadow-md p-5">
+          <h2 className="text-lg font-semibold mb-4">Comments</h2>
+
+          {(comments?.length ?? 0) === 0 ? (
+            <p className="text-gray-500">No comments</p>
+          ) : (
+            <div className="space-y-4">
+              {comments.map((c) => (
+                <div key={c.id} className="border-b pb-3 last:border-none">
+                  <div className="flex justify-between text-sm text-gray-600">
+                    <span className="font-medium text-black">
+                      {c.user_name}
+                    </span>
+                    <span>{c.date_publication}</span>
+                  </div>
+
+                  <p className="mt-1">{c.message}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
-
-      {/* FAVORITES */}
-      <section>
-        <h2 className="text-lg font-semibold mb-2">Favorites</h2>
-
-        {(favorites?.length ?? 0) === 0 ? (
-          <p className="opacity-70">No favorites</p>
-        ) : (
-          <ul className="space-y-2">
-            {favorites.map((b) => (
-              <li key={b.id} className="bg-white/5 p-2 rounded">
-                {b.title}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      {/* HISTORY */}
-      <section>
-        <h2 className="text-lg font-semibold mb-2">History</h2>
-
-        {(books?.length ?? 0) === 0 ? (
-          <p className="opacity-70">No history</p>
-        ) : (
-          <ul className="space-y-2">
-            {books.map((b) => (
-              <li key={b.id} className="bg-white/5 p-2 rounded">
-                {b.title}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-
-      {/* COMMENTS */}
-      <section>
-        <h2 className="text-lg font-semibold mb-2">Comments</h2>
-
-        {(comments?.length ?? 0) === 0 ? (
-          <p className="opacity-70">No comments</p>
-        ) : (
-          <ul className="space-y-2">
-            {comments.map((c) => (
-              <li key={c.id} className="bg-white/5 p-2 rounded">
-                {c.message}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
     </div>
   );
 }
