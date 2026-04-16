@@ -41,7 +41,11 @@ def create_app() -> Flask:
     jwt.init_app(app)
 
     # CORS allowed origins
-    cors.init_app(app, resources={r"/*": {"origins": app.config["CORS_ORIGINS"]}})
+    cors.init_app(
+        app,
+        resources={r"/*": {"origins": app.config["CORS_ORIGINS"]}},
+        supports_credentials=True,
+    )
 
     # == This is where our routes are
     register_blueprints(app)

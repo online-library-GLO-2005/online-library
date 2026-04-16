@@ -1,6 +1,6 @@
 from functools import wraps
 from app.errors import AppError
-from app.utils.security import is_admin_from_jwt, get_user_id
+from app.utils.security import is_admin_from_context, get_user_id
 from flask_jwt_extended import verify_jwt_in_request
 
 
@@ -10,7 +10,7 @@ def admin_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         verify_jwt_in_request()
-        if not is_admin_from_jwt():
+        if not is_admin_from_context():
             raise AppError(403, "User is not admin")
         return f(*args, **kwargs)
 
@@ -33,7 +33,7 @@ def require_owner_or_admin(get_owner_id_fn, resource_id_arg="id"):
 
             verify_jwt_in_request()
 
-            if is_admin_from_jwt():
+            if is_admin_from_context():
                 return f(*args, **kwargs)
 
             resource_user_id = get_owner_id_fn(resource_id)

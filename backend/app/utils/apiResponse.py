@@ -15,7 +15,9 @@ def success_response(
     if message:
         resp["message"] = message
 
-    return jsonify(resp), status_code
+    response = jsonify(resp)
+    response.status_code = status_code
+    return response
 
 
 # API format of response if error

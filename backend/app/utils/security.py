@@ -43,9 +43,15 @@ def get_user_id() -> str:
 
 
 # Verify if admin from jwt token, the token is passed through the decorator of the route @jwt_required()
-def is_admin_from_jwt() -> bool:
+def is_admin_from_context() -> bool:
     jwt_data = get_jwt()
     return bool(jwt_data.get("is_admin", False))
+
+
+# This is a manual verification by passing the token
+def is_admin_from_jwt(token: str) -> bool:
+    decoded = decode_token(token)
+    return bool(decoded.get("is_admin", False))
 
 
 # === Bcrypt for password protection ===
