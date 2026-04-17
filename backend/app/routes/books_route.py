@@ -1,6 +1,9 @@
 from flask import Blueprint, request, jsonify
 from app.services.book_service import book_service
-from app.utils.apiResponse import success_response, error_response  # Ajout de error_response
+from app.utils.apiResponse import (
+    success_response,
+    error_response,
+)  # Ajout de error_response
 from app.schemas.book_schema import BookSchema
 from app.utils.guards import admin_required
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -15,6 +18,7 @@ bp = Blueprint("books", __name__, url_prefix="/books")
 
 
 # --- Routes existantes ---
+
 
 @bp.get("/")
 def get_all():
@@ -37,7 +41,15 @@ def add_book():
     return success_response(201, schema.dump(new_book), "Livre créé avec succès")
 
 
+@bp.delete("/<int:id>")
+@admin_required
+def delete_book(id):
+    new_book = book_service.delete(id)
+    return success_response(200, None, "Livre a été supprimé")
+
+
 # --- Nouvelles routes de liaisons ---
+
 
 @bp.post("/<int:lid>/authors/<int:aid>")
 @admin_required
@@ -55,6 +67,7 @@ def link_genre_to_book(lid, gid):
 
 # --- GESTION DES COMMENTAIRES ---
 
+
 @bp.route("/<int:lid>/comments", methods=["GET"])
 def get_book_comments(lid):
     comments = comment_service.get_comments_by_book(lid)
@@ -69,29 +82,35 @@ def add_comment(lid):
     current_user_id = get_jwt_identity()
 
     data = request.get_json()
-    if not data or 'message' not in data:
+    if not data or "message" not in data:
         return error_response(400, "Le message est requis")
 
     new_comment = comment_service.add_comment(
-        user_id=current_user_id,
-        book_id=lid,
-        message=data['message']
-        )
+        user_id=current_user_id, book_id=lid, message=data["message"]
+    )
 
-    return success_response(201, CommentSchema().dump(new_comment), "Commentaire ajouté")
+    return success_response(
+        201, CommentSchema().dump(new_comment), "Commentaire ajouté"
+    )
+
 
 # --- Récupération des relations ---
+
 
 @bp.get("/<int:lid>/authors")
 def get_book_authors(lid):
     authors = book_service.get_authors_by_book(lid)
-    return success_response(200, AuthorSchema(many=True).dump(authors), "Auteurs récupérés")
+    return success_response(
+        200, AuthorSchema(many=True).dump(authors), "Auteurs récupérés"
+    )
 
 
 @bp.get("/<int:lid>/genres")
 def get_book_genres(lid):
     genres = book_service.get_genres_by_book(lid)
-    return success_response(200, GenreSchema(many=True).dump(genres), "Genres récupérés")
+    return success_response(
+        200, GenreSchema(many=True).dump(genres), "Genres récupérés"
+    )
 
 
 @bp.post("/<int:lid>/ratings")
@@ -101,10 +120,10 @@ def add_rating(lid):
         current_user_id = get_jwt_identity()
         data = request.get_json()
 
-        if not data or 'note' not in data:
+        if not data or "note" not in data:
             return error_response(400, "La note est manquante")
 
-        note = float(data['note'])
+        note = float(data["note"])
 
         rating_service.rate_book(current_user_id, lid, note)
 

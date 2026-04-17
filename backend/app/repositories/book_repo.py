@@ -22,9 +22,9 @@ class BookRepo(BaseRepo):
     def create_book(self, data: dict):
         check_query = f"SELECT COUNT(*) as count FROM {Book.TABLE} WHERE {Book.Columns.TITLE} LIKE %s"
         result = self._db.execute(check_query, (f"{data['title']}%",))
-        count = result[0]['count']
+        count = result[0]["count"]
 
-        final_title = data['title'] if count == 0 else f"{data['title']} ({count})"
+        final_title = data["title"] if count == 0 else f"{data['title']} ({count})"
 
         insert_query = f"""
             INSERT INTO {Book.TABLE} 
@@ -34,9 +34,13 @@ class BookRepo(BaseRepo):
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
         params = (
-            data['eid'], data['isbn'], final_title,
-            data.get('description'), data.get('cover_url'),
-            data.get('content_url'), data['pub_date']
+            data["eid"],
+            data["isbn"],
+            final_title,
+            data.get("description"),
+            data.get("cover_url"),
+            data.get("content_url"),
+            data["pub_date"],
         )
 
         last_id = self._db.execute(insert_query, params, return_id=True)
@@ -94,5 +98,10 @@ class BookRepo(BaseRepo):
         """
         rows = self._db.execute(query, (lid,))
         return [Genre.from_dict(row) for row in rows]
+
+    def delete(self, lid: int):
+        query = "DELETE FROM Livre WHERE LID = %s"
+        self._db.execute(query, (lid,))
+
 
 book_repo = BookRepo()
